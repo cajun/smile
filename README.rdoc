@@ -1,0 +1,7 @@
+= smile
+
+Description goes here.
+
+== Copyright
+
+Copyright (c) 2009 cajun. See LICENSE for details.
