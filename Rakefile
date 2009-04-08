@@ -9,9 +9,10 @@ begin
     gem.email = "zac@kleinpeter.org"
     gem.homepage = "http://github.com/cajun/smile"
     gem.authors = ["cajun"]
+    gem.files << "lib/**/*"
     gem.add_dependency( 'rest-client' )
     gem.add_dependency( 'activesupport' )
-
+    
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
 rescue LoadError

@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{smile}
-  s.version = "0.0.0"
+  s.version = "0.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["cajun"]
-  s.date = %q{2009-04-06}
+  s.date = %q{2009-04-08}
   s.email = %q{zac@kleinpeter.org}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -17,7 +17,9 @@ Gem::Specification.new do |s|
     "LICENSE",
     "README.rdoc",
     "Rakefile",
+    "VERSION.yml",
     "lib/smile.rb",
+    "lib/smile/album.rb",
     "test/smile_test.rb",
     "test/test_helper.rb"
   ]
@@ -37,8 +39,14 @@ Gem::Specification.new do |s|
     s.specification_version = 2
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<rest-client>, [">= 0"])
+      s.add_runtime_dependency(%q<activesupport>, [">= 0"])
     else
+      s.add_dependency(%q<rest-client>, [">= 0"])
+      s.add_dependency(%q<activesupport>, [">= 0"])
     end
   else
+    s.add_dependency(%q<rest-client>, [">= 0"])
+    s.add_dependency(%q<activesupport>, [">= 0"])
   end
 end
