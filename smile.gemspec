@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{smile}
-  s.version = "0.1.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["cajun"]
@@ -20,6 +20,9 @@ Gem::Specification.new do |s|
     "VERSION.yml",
     "lib/smile.rb",
     "lib/smile/album.rb",
+    "lib/smile/base.rb",
+    "lib/smile/photo.rb",
+    "lib/smile/smug.rb",
     "test/smile_test.rb",
     "test/test_helper.rb"
   ]
