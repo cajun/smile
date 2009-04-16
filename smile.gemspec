@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["cajun"]
-  s.date = %q{2009-04-08}
+  s.date = %q{2009-04-15}
   s.email = %q{zac@kleinpeter.org}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/cajun/smile}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
+  s.rubyforge_project = %q{cajun-gems}
   s.rubygems_version = %q{1.3.1}
   s.summary = %q{TODO}
   s.test_files = [
