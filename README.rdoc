@@ -1,6 +1,24 @@
 = smile
 
-Description goes here.
+Smile is a simple gem to talk to SmugMug.com.
+
+smug = Smile::Smug.new
+smug.auth_anonymously
+albums = smug.albums( :NickName => 'kleinpeter' )
+
+album = albums.first # just test the first one
+
+album.photos # and see the pretty pics
+
+ -- or --
+ 
+smug = Smile::Smug.new
+smug.auth( 'my_nick', 'my_pass' )
+albums = smug.albums # theses are mine
+
+album = albums.first # just test the first one
+
+album.photos # and see the pretty pics
 
 == Copyright
 
