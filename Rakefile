@@ -5,7 +5,7 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "smile"
-    gem.summary = %Q{TODO}
+    gem.summary = %Q{Simple API for talking to SmugMug}
     gem.email = "zac@kleinpeter.org"
     gem.homepage = "http://github.com/cajun/smile"
     gem.authors = ["cajun"]

@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{cajun-gems}
   s.rubygems_version = %q{1.3.2}
-  s.summary = %q{TODO}
+  s.summary = %q{Simple API for talking to SmugMug}
   s.test_files = [
     "test/smile_test.rb",
     "test/test_helper.rb"
