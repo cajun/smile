@@ -16,10 +16,19 @@ module Smile
       # This will be included in every request once you have logged in
       def default_params
         base = { :APIKey => API }
+        #set_session
         if( session_id )
           base.merge!( :SessionID => session_id )
         end
         base
+      end
+      
+      def set_session
+        if( session_id.nil? )
+          smug = Smug.new
+          smug.auth_anonymously
+          self.session_id = smug.session_id
+        end
       end
     end
     

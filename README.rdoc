@@ -2,6 +2,12 @@
 
 Smile is a simple gem to talk to SmugMug.com.
 
+New auth accessors
+  smug = Smile.auth_anonymously
+   _and_
+  smug = Smile.auth( 'nick', 'pass' )
+
+
   smug = Smile::Smug.new
   smug.auth_anonymously
   albums = smug.albums( :NickName => 'kleinpeter' )
@@ -19,6 +25,14 @@ Smile is a simple gem to talk to SmugMug.com.
   album = albums.first # just test the first one
 
   album.photos # and see the pretty pics
+
+
+== TODO
+* Clean up params so they are not case sensitive
+* Add in RSS/Atom feeds as search options
+* Update Documentation
+* Plugin in Cucumber
+
 
 == Copyright
 

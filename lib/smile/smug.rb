@@ -45,6 +45,7 @@ module Smile
       RestClient.post( BASE, params )
     end
 
+    
 
     # Retrieves a list of albums for a given user. If you are logged in it will return
     # your albums.
