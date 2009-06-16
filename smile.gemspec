@@ -2,40 +2,39 @@
 
 Gem::Specification.new do |s|
   s.name = %q{smile}
-  s.version = "0.1.2"
+  s.version = "0.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["cajun"]
-  s.date = %q{2009-04-29}
+  s.date = %q{2009-06-16}
   s.email = %q{zac@kleinpeter.org}
   s.extra_rdoc_files = [
     "LICENSE",
-    "README",
-    "README.rdoc"
+     "README.rdoc"
   ]
   s.files = [
     "LICENSE",
-    "README.rdoc",
-    "Rakefile",
-    "VERSION.yml",
-    "lib/smile.rb",
-    "lib/smile/album.rb",
-    "lib/smile/base.rb",
-    "lib/smile/photo.rb",
-    "lib/smile/smug.rb",
-    "test/smile_test.rb",
-    "test/test_helper.rb"
+     "README.rdoc",
+     "Rakefile",
+     "VERSION.yml",
+     "lib/smile.rb",
+     "lib/smile/album.rb",
+     "lib/smile/base.rb",
+     "lib/smile/photo.rb",
+     "lib/smile/smug.rb",
+     "smile.gemspec",
+     "test/smile_test.rb",
+     "test/test_helper.rb"
   ]
-  s.has_rdoc = true
   s.homepage = %q{http://github.com/cajun/smile}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{cajun-gems}
-  s.rubygems_version = %q{1.3.2}
+  s.rubygems_version = %q{1.3.4}
   s.summary = %q{Simple API for talking to SmugMug}
   s.test_files = [
     "test/smile_test.rb",
-    "test/test_helper.rb"
+     "test/test_helper.rb"
   ]
 
   if s.respond_to? :specification_version then
