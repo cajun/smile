@@ -1,10 +1,17 @@
 = smile
 
 Smile is a simple gem to talk to SmugMug.com.
+This gem wraps the 1.2.0 interface.
 
-New auth accessors
+== New Features
+
+=== Search feeds
+  Smile.search( 'blueberries' ) => [Smile::Photo] 
+  Smile.search_rss( 'bison' ) => RSS::Parser Feed
+  Smile.search_raw( 'grand' ) => Raw response from the feed
+
+===New auth accessors
   smug = Smile.auth_anonymously
-   _and_
   smug = Smile.auth( 'nick', 'pass' )
 
 
@@ -16,8 +23,7 @@ New auth accessors
 
   album.photos # and see the pretty pics
 
-== or
- 
+==== Old auth accessors ( NOTE: These are still supported )
   smug = Smile::Smug.new
   smug.auth( 'my_nick', 'my_pass' )
   albums = smug.albums # theses are mine
@@ -29,8 +35,8 @@ New auth accessors
 
 == TODO
 * Clean up params so they are not case sensitive
-* Add in RSS/Atom feeds as search options
-* Update Documentation
+* Create better exception handlers
+* Update Documentation ( getting there.  it's being published on rdoc.info now )
 * Plugin in Cucumber
 
 

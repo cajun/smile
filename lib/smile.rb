@@ -5,105 +5,126 @@ require 'lib/smile/base'
 require 'lib/smile/smug'
 require 'lib/smile/album'
 require 'lib/smile/photo'
+require 'lib/smile/param_converter'
 require 'cgi'
 require 'rss'
 
 module Smile
+  module_function
+  
   def auth_anonymously
     smug = Smile::Smug.new
     smug.auth_anonymously
     smug
   end
-  module_function( :auth_anonymously )
   
-  def auth( user, pass )
+  # Login to SmugMug using a specific user account.
+  #
+  # @param [String] username The username ( Nickname ) for the SmugMug account
+  # @param [String] password The password for the SmugMug account
+  #
+  # @return [Smile::SmugMug.new] An Smug object that has been authenticated
+  def auth( username, password )
     smug = Smile::Smug.new
-    smug.auth( user, pass )
+    smug.auth( username, password )
     smug
   end
-  module_function( :auth )
   
   def base_feed( options={} )
     options.merge!( :format => 'rss' )
     url = "http://api.smugmug.com/hack/feed.mg?"
     url_params =[]
     options.each_pair do |k,value|
-      case k.to_s.downcase.to_sym
-        when :popular_category
-          key = :popularCategory
-        when :geo_all 
-          key = :geoAll
-        when :geo_keyword 
-          key = :geoKeyword
-        when :geo_search 
-          key = :geoSearch
-        when :geo_community
-          key = :geoCommunity 
-        when :open_search_keyword
-          key = :openSearchKeyword
-        when :user_keyword 
-          key = :userkeyword
-        when :nickname_recent 
-          key = :nicknameRecent
-        when :nickname_popular 
-          key = :nicknamePopular
-        when :user_comments 
-          key = :userComments
-        when :geo_user 
-          key = :geoUser
-        when :geo_album 
-          key = :geoAlbum
-        when :size
-          key = :Size
-          value = value.titlecase
-        when :image_count
-          key = :ImageCount
-        else
-          key = k
-      end
+      key, value = Smile::ParamConverter.convert( k, value )
       
       url_params << "#{key.to_s}=#{ CGI.escape( value ) }"
     end
     
-    content = RestClient.get( url + url_params.join( "&" ) )
-    RSS::Parser.parse( content, false )
+    RestClient.get( url + url_params.join( "&" ) )
   end
-  module_function( :base_feed )
+  private( :base_feed )
   
-  # Search SmugMug for pics.
-  # By Default it will use the keyword search.
+  # Search SmugMug for pics.  This search is slower than the others, but returns Smile::Photo objects
   # 
-  # options
-  #   type => [ 
-  #     keyword 
-  #     popular # Use term all or today
-  #     popularCategory # Use term category ( e.g. cars )
-  #     geoAll 
-  #     geoKeyword 
-  #     geoSearch 
-  #     geoCommunity 
-  #     openSearchKeyword
-  #     userkeyword # Use term nickname
-  #     gallery # Use term albumID_albumKey
-  #     nickname # Use term nickname
-  #     nicknameRecent # Use term nickname
-  #     nicknamePopular # Use term nickname
-  #     usercomments # Use term nickname
-  #     geoUser # Use term nickname
-  #     geoAlbum # Use term albumID_albumKey
-  #   ]
+  # @param [String] data This is the search term that you want to use
+  # @param [optional, Hash] options Hash of options for the search method
+  # @option options [optional, String] :keyword override the keyword search
+  # @option options [optional, String] :popular Use term all or today
+  # @option options [optional, String] :popular_category Use term category ( e.g. cars )
+  # @option options [optional, String] :geo_all Geo Stuff
+  # @option options [optional, String] :geo_community More Geo Stuff
+  # @option options [optional, String] :geo_search Geo Search
+  # @option options [optional, String] :open_search_keyword Key word
+  # @option options [optional, String] :user_keyword Use term nickname
+  # @option options [optional, String] :gallery Use term albumID_albumKey
+  # @option options [optional, String] :nickname Use term nickname
+  # @option options [optional, String] :nickname_recent Use term nickname
+  # @option options [optional, String] :nickname_popular Use term nickname
+  # @option options [optional, String] :user_comments Use term nickname
+  # @option options [optional, String] :geo_user Use term nickname
+  # @option options [optional, String] :geo_album Use term nickname
+  # 
+  # @return [Array<Smile::Photo>] Smile::Photo objects will be returned.  This take longer due to
+  # pulling more details from every photo.
   def search( data, options={} )
-    rss = search_raw( data, options )
-    rss.items.map{ |item| item.guid.content }
+    rss = search_rss( data, options )
     
+    rss.items.map do |item| 
+      image_id, image_key = item.link.split('/').last.split('#').last.split('_')
+      Smile::Photo.find( :image_id => image_id, :image_key => image_key )
+    end
   end
-  module_function( :search )
   
-  # Get the RAW feed
+  # Search SmugMug for pics.  This search is slower than the others, but returns Smile::Photo objects
+  # 
+  # @param [String] data This is the search term that you want to use
+  # @param [optional, Hash] options Hash of options for the search method
+  # @option options [optional, String] :keyword override the keyword search
+  # @option options [optional, String] :popular Use term all or today
+  # @option options [optional, String] :popular_category Use term category ( e.g. cars )
+  # @option options [optional, String] :geo_all Geo Stuff
+  # @option options [optional, String] :geo_community More Geo Stuff
+  # @option options [optional, String] :geo_search Geo Search
+  # @option options [optional, String] :open_search_keyword Key word
+  # @option options [optional, String] :user_keyword Use term nickname
+  # @option options [optional, String] :gallery Use term albumID_albumKey
+  # @option options [optional, String] :nickname Use term nickname
+  # @option options [optional, String] :nickname_recent Use term nickname
+  # @option options [optional, String] :nickname_popular Use term nickname
+  # @option options [optional, String] :user_comments Use term nickname
+  # @option options [optional, String] :geo_user Use term nickname
+  # @option options [optional, String] :geo_album Use term nickname
+  # 
+  # @return [Array<Smile::Photo>] RSS feed from the RSS::Parser.parse method
+  def search_rss( data, options={} )
+    raw = search_raw( data, options )
+    RSS::Parser.parse( raw, false )
+  end
+  
+  # Raw feed from the SmugMug data feeds
+  # 
+  # @param [String] data This is the search term that you want to use
+  # @param [optional, Hash] options Hash of options for the search method
+  # @option options [optional, String] :keyword override the keyword search
+  # @option options [optional, String] :popular Use term all or today
+  # @option options [optional, String] :popular_category Use term category ( e.g. cars )
+  # @option options [optional, String] :geo_all Geo Stuff
+  # @option options [optional, String] :geo_community More Geo Stuff
+  # @option options [optional, String] :geo_search Geo Search
+  # @option options [optional, String] :open_search_keyword Key word
+  # @option options [optional, String] :user_keyword Use term nickname
+  # @option options [optional, String] :gallery Use term albumID_albumKey
+  # @option options [optional, String] :nickname Use term nickname
+  # @option options [optional, String] :nickname_recent Use term nickname
+  # @option options [optional, String] :nickname_popular Use term nickname
+  # @option options [optional, String] :user_comments Use term nickname
+  # @option options [optional, String] :geo_user Use term nickname
+  # @option options [optional, String] :geo_album Use term nickname
+  # 
+  # @return [RestClientResponse] The response from a RestClient.get request
   def search_raw( data, options={} )
     options.merge!( :type => 'keyword', :data => data )
     base_feed( options )
   end
-  module_function( :search_raw )
 end
 
