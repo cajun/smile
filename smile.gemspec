@@ -2,24 +2,26 @@
 
 Gem::Specification.new do |s|
   s.name = %q{smile}
-  s.version = "0.1.3"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["cajun"]
-  s.date = %q{2009-06-16}
+  s.date = %q{2009-07-11}
   s.email = %q{zac@kleinpeter.org}
   s.extra_rdoc_files = [
     "LICENSE",
      "README.rdoc"
   ]
   s.files = [
-    "LICENSE",
+    ".yardoc",
+     "LICENSE",
      "README.rdoc",
      "Rakefile",
      "VERSION.yml",
      "lib/smile.rb",
      "lib/smile/album.rb",
      "lib/smile/base.rb",
+     "lib/smile/param_converter.rb",
      "lib/smile/photo.rb",
      "lib/smile/smug.rb",
      "smile.gemspec",
