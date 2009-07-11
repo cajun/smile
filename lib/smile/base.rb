@@ -16,7 +16,6 @@ module Smile
       # This will be included in every request once you have logged in
       def default_params
         base = { :APIKey => API }
-        #set_session
         if( session_id )
           base.merge!( :SessionID => session_id )
         end

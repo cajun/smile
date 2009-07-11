@@ -26,12 +26,15 @@ class Smile::Photo < Smile::Base
     
     # This will pull a single image from the smugmug
     #
-    # * int ImageID
+    # * int image_id
     # * String Password optional
     # * String SitePassword optional
     # * String ImageKey
     # 
     def find( options={} )
+      set_session if( session_id.nil? )
+      options = Smile::ParamConverter.clean_hash_keys( options )
+      
       params = default_params.merge(
           :method => 'smugmug.images.getInfo'
       )
@@ -39,6 +42,7 @@ class Smile::Photo < Smile::Base
       params.merge!( options ) if( options )
       xml = RestClient.post Smile::Base::BASE, params
       image = Hash.from_xml( xml )["rsp"]["image"]
+      
       image.merge!( :image_id => image["id"] )
       image.merge!( :album_key => image["album"]["key"] )
       image.merge!( :album_id => image["album"]["id"] )
