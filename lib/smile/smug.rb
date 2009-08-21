@@ -8,6 +8,12 @@
 module Smile
   class Smug < Smile::Base
  
+    # Login to SmugMug using a specific user account.
+    #
+    # @param [String] email The username ( Nickname ) for the SmugMug account
+    # @param [String] password The password for the SmugMug account
+    #
+    # @return [Smile::SmugMug.new] An Smug object that has been authenticated
     def auth( email, pass )
      params = default_params.merge(
         :method => 'smugmug.login.withPassword',
@@ -15,28 +21,33 @@ module Smile
         :Password => pass
       )
 
-      xml = RestClient.post( BASE, params )
-      result = Hash.from_xml( xml )["rsp"]["login"]
-      self.session_id = result["session"]["id"]
+      json = RestClient.post( BASE, params )
+      result = JSON.parse( json )
+      
+      self.session_id = result["Login"]["Session"]["id"]
       result
     rescue NoMethodError => e
       nil
     end
 
-    
+    # Login to SmugMug using an anonymously account
+    # This will allow you to execute many functions, but no user specific functions
+    #
+    # @return [Smile::SmugMug.new] An Smug object that has been authenticated
     def auth_anonymously
       params = default_params.merge(
         :method => 'smugmug.login.anonymously'
       )
 
-      xml = RestClient.post( BASE, params )
-      result = Hash.from_xml( xml )["rsp"]["login"]
-      self.session_id = result["session"]["id"]
+      json = RestClient.post( BASE, params )
+      result = JSON.parse( json )
+      self.session_id = result["Login"]["Session"]["id"]
       result
     rescue NoMethodError => e
       nil
     end
 
+    # Close the session
     def logout
       params = default_params.merge(
         :method => 'smugmug.logout'
@@ -50,87 +61,16 @@ module Smile
     # Retrieves a list of albums for a given user. If you are logged in it will return
     # your albums.
     # 
-    # Arguments
-    # NickName - string (optional).
-    # Heavy - boolean (optional).
-    # SitePassword - string (optional).
+    # @param [optional,Hash] options The magic options hash all ruby devs love
+    # @option options [optional, String] :nick_name If no nick name is supplied then...
+    # @option options [optional, true or false ] :heavy ('true') This will control how much 
+    # information is returned about the album
+    # @option options [optional, String] :site_password If you have not logged in then you can provide the 
+    # password here to access private information.
     #
-    # Result
-    #     STANDARD RESPONSE
+    # @return [Array<Smile::Album>]
     # 
-    # array Albums
-    # Album
-    #   integer id
-    #   string Key
-    #   string Title
-    #   struct Category
-    #   string id
-    #   string Name
-    #   struct SubCategory
-    #   string id
-    #   string Name
-    #
-    #     HEAVY RESPONSE
-    #   
-    # array Albums
-    # Album
-    #   integer id
-    #   string Key
-    #   string Title
-    #   struct Category
-    #     string id
-    #     string Name
-    #   struct SubCategory
-    #     string id
-    #     string Name
-    #   string Description
-    #   string Keywords
-    #   boolean Geography (owner)
-    #   integer Position
-    #   struct Hightlight (owner)
-    #     string id
-    #   integer ImageCount
-    #   string LastUpdated
-    #   boolean Header (owner, power & pro only)
-    #   boolean Clean (owner)
-    #   boolean EXIF (owner)
-    #   boolean Filenames (owner)
-    #   struct Template (owner)
-    #     string id
-    #   string SortMethod (owner)
-    #   boolean SortDirection (owner)
-    #   string Password (owner)
-    #   string PasswordHint (owner)
-    #   boolean Public (owner)
-    #   boolean WorldSearchable (owner)
-    #   boolean SmugSearchable (owner)
-    #   boolean External (owner)
-    #   boolean Protected (owner, power & pro only)
-    #   boolean Watermarking (owner, pro only)
-    #   struct Watermark (owner, pro only)
-    #     string id
-    #   boolean HideOwner (owner)
-    #   boolean Larges (owner, pro only)
-    #   boolean XLarges (owner, pro only)
-    #   boolean X2Larges (owner)
-    #   boolean X3Larges (owner)
-    #   boolean Originals (owner)
-    #   boolean CanRank (owner)
-    #   boolean FriendEdit (owner)
-    #   boolean FamilyEdit (owner)
-    #   boolean Comments (owner)
-    #   boolean Share (owner)
-    #   boolean Printable (owner)
-    #   int ColorCorrection (owner)
-    #   boolean DefaultColor (owner, pro only)  deprecated
-    #   integer ProofDays (owner, pro only)
-    #   string Backprinting (owner, pro only)
-    #   float UnsharpAmount (owner, power & pro only)
-    #   float UnsharpRadius (owner, power & pro only)
-    #   float UnsharpThreshold (owner, power & pro only)
-    #   float UnsharpSigma (owner, power & pro only)
-    #   struct Community (owner)
-    #     string id
+    # @see Smug::Album#new For more information about heavy ( true and false ) responces
     def albums( options=nil )
       params = default_params.merge( 
         :method => 'smugmug.albums.get',
@@ -138,9 +78,9 @@ module Smile
       )      
 
       params = params.merge( options ) if( options )
-      xml = RestClient.post BASE, params
+      json = RestClient.post BASE, params
       
-      Smile::Album.from_xml( xml, session_id )
+      Smile::Album.from_json( json, session_id )
     rescue
       nil
     end

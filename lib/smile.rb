@@ -8,10 +8,15 @@ require 'lib/smile/photo'
 require 'lib/smile/param_converter'
 require 'cgi'
 require 'rss'
+require 'json'
 
 module Smile
   module_function
   
+  # Login to SmugMug using an anonymously account
+  # This will allow you to execute many functions, but no user specific functions
+  #
+  # @return [Smile::SmugMug.new] An Smug object that has been authenticated
   def auth_anonymously
     smug = Smile::Smug.new
     smug.auth_anonymously
@@ -20,15 +25,16 @@ module Smile
   
   # Login to SmugMug using a specific user account.
   #
-  # @param [String] username The username ( Nickname ) for the SmugMug account
+  # @param [String] email The username ( e-mail address ) for the SmugMug account
   # @param [String] password The password for the SmugMug account
   #
   # @return [Smile::SmugMug.new] An Smug object that has been authenticated
-  def auth( username, password )
+  def auth( email, password )
     smug = Smile::Smug.new
-    smug.auth( username, password )
+    smug.auth( email, password )
     smug
   end
+  
   
   def base_feed( options={} )
     options.merge!( :format => 'rss' )

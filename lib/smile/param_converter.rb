@@ -43,6 +43,8 @@ module Smile::ParamConverter
         key = :ImageKey
       when :image_count
         key = :ImageCount
+      when :nickname, :nick_name
+        key = :NickName
       else
         key = param
     end

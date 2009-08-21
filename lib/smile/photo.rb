@@ -9,10 +9,11 @@ class Smile::Photo < Smile::Base
   
   class << self
     # Convert the given xml into photo objects to play with
-    def from_xml( xml, session_id )
-      hash = Hash.from_xml( xml )["rsp"]
+    def from_json( json, session_id )
+      result = JSON.parse( json )
       
-      hash["images"]["image"].map do |image|
+      result["Images"].map do |image_upper|
+        image = upper_hash_to_lower_hash( image_upper )
         image.merge!( :image_id => image["id"] )
         image.merge!( :album_key => image["album"]["key"] )
         image.merge!( :album_id => image["album"]["id"] )
@@ -40,8 +41,9 @@ class Smile::Photo < Smile::Base
       )
       
       params.merge!( options ) if( options )
-      xml = RestClient.post Smile::Base::BASE, params
-      image = Hash.from_xml( xml )["rsp"]["image"]
+      json = RestClient.post Smile::Base::BASE, params
+      image_upper = JSON.parse( json )
+      image = upper_hash_to_lower_hash( image_upper['Image'] )
       
       image.merge!( :image_id => image["id"] )
       image.merge!( :album_key => image["album"]["key"] )
@@ -104,12 +106,12 @@ class Smile::Photo < Smile::Base
     )
     
     params.merge!( options ) if( options )
-    xml = RestClient.post Smile::Base::BASE, params
+    json = RestClient.post Smile::Base::BASE, params
     
-    rsp = Hash.from_xml( xml )["rsp"]
-    raise rsp["message"] if rsp["stat"] == 'fail'
+    json = JSON.parse( json )
+    raise json["message"] if json["stat"] == 'fail'
       
-    image = Hash.from_xml( xml )["rsp"]["image"]
+    image = upper_hash_to_lower_hash( json['Image'] )
     image.merge!( :image_id => image["id"] )
     
     OpenStruct.new( image )
@@ -163,12 +165,12 @@ class Smile::Photo < Smile::Base
     )
     
     params.merge!( options ) if( options )
-    xml = RestClient.post Smile::Base::BASE, params
+    json = RestClient.post Smile::Base::BASE, params
     
-    rsp = Hash.from_xml( xml )["rsp"]
-    raise rsp["message"] if rsp["stat"] == 'fail'
+    json = JSON.parse( json )
+    raise json["message"] if json["stat"] == 'fail'
       
-    image = Hash.from_xml( xml )["rsp"]["image"]
+    image = upper_hash_to_lower_hash( json['Image'] )
     image.merge!( :image_id => image["id"] )
     
     OpenStruct.new( image )  
@@ -214,12 +216,12 @@ class Smile::Photo < Smile::Base
     )
     
     params.merge!( options ) if( options )
-    xml = RestClient.post Smile::Base::BASE, params
+    json = RestClient.post Smile::Base::BASE, params
     
-    rsp = Hash.from_xml( xml )["rsp"]
-    raise rsp["message"] if rsp["stat"] == 'fail'
-    
-    image = Hash.from_xml( xml )["rsp"]["image"]
+    json = JSON.parse( json )
+    raise json["message"] if json["stat"] == 'fail'
+      
+    image = upper_hash_to_lower_hash( json['Image'] )
     image.merge!( :image_id => image["id"] )
     
     OpenStruct.new( image )  
