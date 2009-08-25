@@ -112,6 +112,7 @@ class Smile::Album < Smile::Base
       json = RestClient.post Smile::Base::BASE, params
       
       album_upper = JSON.parse(json)
+    
       album = upper_hash_to_lower_hash( album_upper['Album'] )
       album.merge!( :album_id => album["id"] )
       
@@ -160,27 +161,44 @@ class Smile::Album < Smile::Base
     
     json = JSON.parse( json )
     raise json["message"] if json["stat"] == 'fail'
-      
-    image = upper_hash_to_lower_hash( json['Album'] )
-    OpenStruct.new( hash )
+
+    stat = upper_hash_to_lower_hash( json['Album'] )
+    OpenStruct.new( stat )
   end
   
-  def add( payload, options={} )
-    if( File.exists?( payload ) )
-    RestClient.put BASE, payload,
-      :content_length => File.size( payload ),
-      :content_md5 => '?',
-      :x_smug_sessionid => session_id,
-      :x_smug_version => VERSION,
-      :x_smug_albumid => album_id,
-      :x_smug_filename => File.basename( payload ),
-      :x_smug_caption => options[:caption],
-      :x_smug_keywords => options[:keywords],
-      :x_smug_latitude => options[:latitude],
-      :x_smug_longitude => options[:longitude],
-      :x_smug_altitude => options[:altitude]
+  # Add an image or vid to the existing album
+  # 
+  # @param [String] image path to image
+  # @param [options,Hash] options Extra params that are accepted 
+  # @option options [optional, String] :caption For multi-line captions, use a carriage return between lines
+  # @option options [optional, String] :keywords Sets the Keywords on the image
+  # @option options [optional, Decimal] :latitude Sets the Latitude of the image (in the form D.d, such as 37.430096)
+  # @option options [optional, Decimal] :longitude Sets the Longitude of the image (in the form D.d, such as -122.152269)
+  # @option options [optional, Decimal] :altitude Sets the Altitude of the image (in meters)
+  def add( image, options={} )
+    if( File.exists?( image ) )
+      json = RestClient.put UPLOAD + "/#{image}", File.read( image ),
+        :content_length => File.size( image ),
+        :content_md5 => MD5.hexdigest( File.read( image ) ),
+        :x_smug_sessionid => session_id,
+        :x_smug_version => VERSION,
+        :x_smug_responseType => "JSON",
+        :x_smug_albumid => album_id,
+        :x_smug_filename => File.basename( image ),
+        :x_smug_caption => options[:caption],
+        :x_smug_keywords => options[:keywords],
+        :x_smug_latitude => options[:latitude],
+        :x_smug_longitude => options[:longitude],
+        :x_smug_altitude => options[:altitude]
+      
+      image = JSON.parse( json )
+      if( image && image["Image"] && image["Image"]["id"] )
+        Smile::Photo.find( :image_id => image["Image"]["id"] )
+      else
+        raise Exception.new( "Failed to upload #{image}" )
+      end
     else
-      Exception.new( "Cannot find file #{payload}." )
+      raise Exception.new( "Cannot find file #{image}." )
     end
   end
   

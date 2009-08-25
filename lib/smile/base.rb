@@ -10,6 +10,7 @@ module Smile
     BASE = 'http://api.smugmug.com/hack/json/1.2.0/'
     BASE_SECURE = 'https://api.smugmug.com/hack/json/1.2.0/'
     API = 'HSoqGCJ8ilF42BeThMGDZqqqOgj1eXqN'
+    UPLOAD = "http://upload.smugmug.com/"
 
     VERSION = '1.2.0'
     

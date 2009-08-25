@@ -27,11 +27,11 @@ class Smile::Photo < Smile::Base
     
     # This will pull a single image from the smugmug
     #
-    # * int image_id
-    # * String Password optional
-    # * String SitePassword optional
-    # * String ImageKey
-    # 
+    # @param [options,Hash] options the hash of options that you have heard about so much in ruby
+    # @option options [int] :image_id The id of the image you want to find
+    # @option options [optional, String] :password The id of the image you want to find
+    # @option options [optional, String] :site_password password word for the site
+    # @option options [optional, String] :image_key image key maybe?
     def find( options={} )
       set_session if( session_id.nil? )
       options = Smile::ParamConverter.clean_hash_keys( options )
