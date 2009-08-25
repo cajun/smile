@@ -3,14 +3,21 @@
 Smile is a simple gem to talk to SmugMug.com.
 This gem wraps the 1.2.0 interface.
 
-== New Features
+== Features
+
+=== NEW Upload Images/Vids
+
+  smug = Smile.auth( 'foo@bar.com', 'pass' )
+  album = smug.albums.first
+  
+  album.add( '/path/to/image.ext' ) # => Smile::Photo (:
 
 === Search feeds
   Smile.search( 'blueberries' ) => [Smile::Photo] 
   Smile.search_rss( 'bison' ) => RSS::Parser Feed
   Smile.search_raw( 'grand' ) => Raw response from the feed
 
-===New auth accessors
+=== auth accessors
   smug = Smile.auth_anonymously
   smug = Smile.auth( 'nick', 'pass' )
 
@@ -34,9 +41,9 @@ This gem wraps the 1.2.0 interface.
 
 
 == TODO
-* Clean up params so they are not case sensitive
+* Clean up params so they are not case sensitive ( Lots of cases have been handled)
 * Create better exception handlers
-* Update Documentation ( getting there.  it's being published on rdoc.info now )
+* Update Documentation ( getting there.  it's being published on rdoc.info now http://rdoc.info/projects/cajun/smile )
 * Plugin in Cucumber
 
 
