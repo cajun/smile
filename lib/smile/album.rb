@@ -122,6 +122,84 @@ class Smile::Album < Smile::Base
     end
   end
 
+  # Update the album from the following params
+  #
+  # @param [optional, Hash] options wow it's a hash
+  #
+  # Essentials
+  # @option options [optional, String] :title the title maybe?
+  # @option options [optional, Fixnum] :category_id it is what it is
+  # @option options [optional, Fixnum] :sub_category_id guess what this is
+  # @option options [optional, String] :description what am i looking at
+  # @option options [optional, String] :keywords space seperated or comman don't know
+  # @option options [optional, Fixnum] :album_template_id yup
+  # @option options [optional, Boolean] :geography huh?
+  # @option options [optional, Fixnum] :highlight_id you guess is as good as mine
+  # @option options [optional, Fixnum] :position I'm just the dev
+  #
+  # Look & Feel
+  # @option options [optional, Boolean] :header I'm just the dev
+  # @option options [optional, Boolean] :clean I'm just the dev
+  # @option options [optional, Boolean] :exif I'm just the dev
+  # @option options [optional, Boolean] :filenames I'm just the dev
+  # @option options [optional, Boolean] :square_thumbs I'm just the dev
+  # @option options [optional, Fixnum] :template_id 0:Viewer Choice 3:SmugMug 4:Traditional 7:All Thumbs 8:Slideshow 9:Journal 10:SmugMug Small 11:Filmstrip
+  # @option options [optional, String] :sort_method %w( Position Caption FileName Date DateTime DateTimeOriginal )
+  # @option options [optional, 1 or 0] :sort_direction 0: Ascending (1-99, A-Z, 1980-2004, etc) 1: Descending (99-1, Z-A, 2004-1980, etc)
+  #
+  # Security & Privacy
+  # @option options [optional, String] :password I'm just the dev
+  # @option options [optional, String] :password_hint I'm just the dev
+  # @option options [optional, Boolean] :public I'm just the dev
+  # @option options [optional, Boolean] :world_searchable I'm just the dev
+  # @option options [optional, Boolean] :smug_searchable I'm just the dev
+  # @option options [optional, Boolean] :external I'm just the dev
+  # @option options [optional, Boolean] :protected I'm just the dev
+  # @option options [optional, Boolean] :watermarking I'm just the dev
+  # @option options [optional, Fixnum] :watermark_id I'm just the dev
+  # @option options [optional, Boolean] :hide_owner I'm just the dev
+  # @option options [optional, Boolean] :larges I'm just the dev
+  # @option options [optional, Boolean] :x_larges I'm just the dev
+  # @option options [optional, Boolean] :x2_larges I'm just the dev
+  # @option options [optional, Boolean] :x3_larges I'm just the dev
+  # @option options [optional, Boolean] :originals I'm just the dev
+  #
+  # Social
+  # @option options [optional, Boolean] :can_rank I'm just the dev
+  # @option options [optional, Boolean] :friend_edit I'm just the dev
+  # @option options [optional, Boolean] :family_edit I'm just the dev
+  # @option options [optional, Boolean] :comments I'm just the dev
+  # @option options [optional, Boolean] :share I'm just the dev
+  #
+  # Printing & Sales
+  # @option options [optional, Boolean] :printable I'm just the dev
+  # @option options [optional, Fixnum] :color_correction I'm just the dev
+  # @option options [optional, Boolean] :default_color I'm just the dev
+  # @option options [optional, Fixnum] :proof_days I'm just the dev
+  # @option options [optional, String] :back_printing I'm just the dev
+  #
+  # Photo Sharpening
+  # @option options [optional, Float] :unsharp_amount I'm just the dev
+  # @option options [optional, Float] :unsharp_radius I'm just the dev
+  # @option options [optional, Float] :unsharp_threshold I'm just the dev
+  # @option options [optional, Float] :unsharp_sigma I'm just the dev
+  #
+  # Community
+  # @option options [optional, Fixnum] :community_id I'm just the dev
+  def update( options )
+    params = default_params.merge(
+        :method => 'smugmug.albums.changeSettings',
+        :AlbumID => album_id,
+    )
+    params.merge!( options ) if( options )
+    params.merge!( options ) if( options )
+    
+    json = RestClient.post BASE, params
+    json = JSON.parse( json )
+    raise json["message"] if json["stat"] == 'fail'
+    true
+  end
+  
   # This will pull all the photos for a given album
   # * SessionID - string. ( by default if logged in)
   # * AlbumID - integer.
@@ -143,10 +221,13 @@ class Smile::Album < Smile::Base
     Smile::Photo.from_json( json, session_id )
   end
   
-  # * integer AlbumID
-  # * integer Month
-  # * integer Year
-  # * boolean Heavy (optional)
+  # Pull stats for an Album for a given Month and Year
+  #
+  #
+  # @param [optional, Hash] options wow it's a hash
+  # @option options [optional, Fixnum] :month (Date.today.month) month field
+  # @option options [optional, Fixnum] :year (Date.today.year) the year and stuff
+  # @option options [optional, 1 or 0] :heavy more details
   def stats( options =nil )
     params = default_params.merge( 
       :method => 'smugmug.albums.getStats',

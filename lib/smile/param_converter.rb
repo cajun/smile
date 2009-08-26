@@ -3,48 +3,102 @@ module Smile::ParamConverter
   
   def convert( param, value=nil )
     key = nil
-    case param.to_s.downcase.to_sym
+    key = case param.to_s.downcase.to_sym
       when :popular_category
-        key = :popularCategory
+        :popularCategory
       when :geo_all 
-        key = :geoAll
+        :geoAll
       when :geo_keyword 
-        key = :geoKeyword
+        :geoKeyword
       when :geo_search 
-        key = :geoSearch
+        :geoSearch
       when :geo_community
-        key = :geoCommunity 
+        :geoCommunity 
       when :open_search_keyword
-        key = :openSearchKeyword
+        :openSearchKeyword
       when :user_keyword 
-        key = :userkeyword
+        :userkeyword
       when :nickname_recent 
-        key = :nicknameRecent
+        :nicknameRecent
       when :nickname_popular 
-        key = :nicknamePopular
+        :nicknamePopular
       when :user_comments 
-        key = :userComments
+        :userComments
       when :geo_user 
-        key = :geoUser
+        :geoUser
       when :geo_album 
-        key = :geoAlbum
+        :geoAlbum
       when :size
-        key = :Size
         value = value.titlecase
+        :Size
       when :image_count
-        key = :ImageCount
-      when :data
-        key = :Data
-      when :type
-        key = :Type
+        :ImageCount
+      when :data, :type, :description, :keywords, :geography, :position, :header,
+        :clean, :filenames, :password, :public, :external, :protected, :watermarking,
+        :larges, :originals, :comments, :share, :printable, :backprinting
+        param.to_s.upcase.to_sym
       when :image_id
-        key = :ImageID
+        :ImageID
       when :image_key
-        key = :ImageKey
+        :ImageKey
       when :image_count
-        key = :ImageCount
+        :ImageCount
       when :nickname, :nick_name
-        key = :NickName
+        :NickName
+      when :category_id
+        :CategoryID
+      when :sub_categroy_id
+        :SubCategoryID
+      when :album_template_id
+        :AlbumTemplateID
+      when :highlight_id
+        :HighlightID
+      when :exif
+        :EXIF
+      when :square_thumbs
+        :Square_Thumbs
+      when :tempate_id
+        :TemplateID
+      when :sort_method
+        :SortMethod
+      when :sort_direction
+        :SortDirection
+      when :password_hint
+        :PasswordHint
+      when :word_searchable
+        :WordSearchable
+      when :smug_searchable
+        :SmugSearchable
+      when :watermark_id
+        :WatermarkID
+      when :hide_owner
+        :HideOwner
+      when :x_larges, :xlarges
+        :XLarges
+      when :x2_larges, :x2larges
+        :X2Larges
+      when :x3_larges, :x3larges
+        :X3Larges
+      when :can_rank
+        :CanRank
+      when :friend_edit
+        :FriendEdit
+      when :family_edit
+        :FamilyEdit
+      when :color_correction
+        :ColorCorrection
+      when :default_color
+        :DefaultColor
+      when :proof_days
+        :ProofDays
+      when :unsharp_amount
+        :UnsharpAmount
+      when :unsharp_radius
+        :UnsharpRadius
+      when :unsharp_sigma
+        :UnsharpSigma
+      when :community_id
+        :CommunityID
       else
         key = param
     end
