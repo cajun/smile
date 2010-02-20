@@ -1,10 +1,12 @@
+# Files
 *.swp
-./tmp/
-./coverage/
-./scratch_directory/
-./rdoc/
 *.jpg
 
-
+# Dir
+tmp/
+coverage/
+scratch_directory/
+rdoc/
+pkg/
 
 
