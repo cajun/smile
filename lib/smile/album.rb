@@ -1,4 +1,4 @@
- # Result
+  # Result
   #     STANDARD RESPONSE
   # 
   # array Albums
@@ -189,7 +189,7 @@ class Smile::Album < Smile::Base
     def create( title, options )
       params = default_params.merge(
           :method => 'smugmug.albums.create',
-          :AlbumID => album_id,
+          :AlbumID => album_id
       )
       options = Smile::ParamConverter.clean_hash_keys( options )
       params.merge!( options ) if( options )
@@ -269,7 +269,7 @@ class Smile::Album < Smile::Base
   def update( options )
     params = default_params.merge(
         :method => 'smugmug.albums.changeSettings',
-        :AlbumID => album_id,
+        :AlbumID => album_id
     )
     options = Smile::ParamConverter.clean_hash_keys( options )
     params.merge!( options ) if( options )
@@ -298,6 +298,7 @@ class Smile::Album < Smile::Base
     params.merge!( options ) if( options )
     
     json = RestClient.post BASE, params
+
     Smile::Photo.from_json( json, session_id )
   end
   

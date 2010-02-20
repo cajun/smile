@@ -1,4 +1,4 @@
-require 'activesupport'
+require 'active_support'
 require 'restclient'
 require 'ostruct'
 require 'lib/smile/base'

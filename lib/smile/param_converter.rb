@@ -110,7 +110,7 @@ module Smile::ParamConverter
     cleaned_hash ={}
     hash_to_clean.each_pair do |key,value|
       cleaned_hash[convert( key ).first] = value
-    end
+    end if( hash_to_clean )
     cleaned_hash
   end
   
