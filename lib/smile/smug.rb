@@ -21,7 +21,7 @@ module Smile
         :Password => pass
       )
 
-      json = RestClient.post( BASE, params )
+      json = RestClient.post( BASE, params ).body
       result = JSON.parse( json )
       
       self.session_id = result["Login"]["Session"]["id"]
@@ -39,7 +39,7 @@ module Smile
         :method => 'smugmug.login.anonymously'
       )
 
-      json = RestClient.post( BASE, params )
+      json = RestClient.post( BASE, params ).body
       result = JSON.parse( json )
       self.session_id = result["Login"]["Session"]["id"]
       result
@@ -53,7 +53,7 @@ module Smile
         :method => 'smugmug.logout'
       )
 
-      RestClient.post( BASE, params )
+      RestClient.post( BASE, params ).body
     end
 
     
@@ -79,7 +79,7 @@ module Smile
 
       options = Smile::ParamConverter.clean_hash_keys( options )
       params = params.merge( options ) if( options )
-      json = RestClient.post BASE, params
+      json = RestClient.post( BASE, params ).body
 
       Smile::Album.from_json( json, session_id )
     rescue

@@ -1,6 +1,7 @@
 # Files
 *.swp
 *.jpg
+.DS_Store
 
 # Dir
 tmp/
@@ -8,5 +9,6 @@ coverage/
 scratch_directory/
 rdoc/
 pkg/
+doc/
 
 

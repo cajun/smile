@@ -46,7 +46,7 @@ module Smile
       url_params << "#{key.to_s}=#{ CGI.escape( value ) }"
     end
     
-    RestClient.get( url + url_params.join( "&" ) )
+    RestClient.get( url + url_params.join( "&" ) ).body
   end
   private( :base_feed )
   

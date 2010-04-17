@@ -3,8 +3,6 @@
 #  smile
 #  
 #  Created by Zac Kleinpeter on 2009-04-28.
-#  Copyright 2009 Cajun Country. All rights reserved.
-# 
 class Smile::Photo < Smile::Base
   
   class << self
@@ -41,7 +39,7 @@ class Smile::Photo < Smile::Base
       )
       
       params.merge!( options ) if( options )
-      json = RestClient.post Smile::Base::BASE, params
+      json = RestClient.post( Smile::Base::BASE, params ).body
       image_upper = JSON.parse( json )
       image = upper_hash_to_lower_hash( image_upper['Image'] )
       
@@ -64,40 +62,40 @@ class Smile::Photo < Smile::Base
   #
   # Arguments:* 
   # 
-  # String Password optional
-  # String SitePassword optional
-  #
   # Result:* struct "Image" [some, none, or all may be returned]
-  # 
-  # int "id"
-  # String "DateTime"
-  # String "DateTimeOriginal"
-  # String "DateTimeDigitized"
-  # String "Make"
-  # String "Model"
-  # String "ExposureTime"
-  # String "Aperture"
-  # int "ISO"
-  # String "FocalLength"
-  # int "FocalLengthIn35mmFilm"
-  # String "CCDWidth"
-  # String "CompressedBitsPerPixel"
-  # int "Flash"
-  # int "Metering"
-  # int "ExposureProgram"
-  # String "ExposureBiasValue"
-  # int "ExposureMode"
-  # int "LightSource"
-  # int "WhiteBalance"
-  # String "DigitalZoomRatio"
-  # int "Contrast"
-  # int "Saturation"
-  # int "Sharpness"
-  # String "SubjectDistance"
-  # int "SubjectDistanceRange"
-  # int "SensingMethod"
-  # String "ColorSpace"
-  # String "Brightness"
+  #   int "id"
+  #   String "DateTime"
+  #   String "DateTimeOriginal"
+  #   String "DateTimeDigitized"
+  #   String "Make"
+  #   String "Model"
+  #   String "ExposureTime"
+  #   String "Aperture"
+  #   int "ISO"
+  #   String "FocalLength"
+  #   int "FocalLengthIn35mmFilm"
+  #   String "CCDWidth"
+  #   String "CompressedBitsPerPixel"
+  #   int "Flash"
+  #   int "Metering"
+  #   int "ExposureProgram"
+  #   String "ExposureBiasValue"
+  #   int "ExposureMode"
+  #   int "LightSource"
+  #   int "WhiteBalance"
+  #   String "DigitalZoomRatio"
+  #   int "Contrast"
+  #   int "Saturation"
+  #   int "Sharpness"
+  #   String "SubjectDistance"
+  #   int "SubjectDistanceRange"
+  #   int "SensingMethod"
+  #   String "ColorSpace"
+  #   String "Brightness"
+  #
+  # @param [options,Hash] options ruby and hashes are like.......
+  # @option options [String] :password a password field
+  # @option options [String] :site_password site password field
   def details( options =nil )
     params = default_params.merge(
       :method => "smugmug.images.getEXIF",
@@ -106,7 +104,7 @@ class Smile::Photo < Smile::Base
     )
     
     params.merge!( options ) if( options )
-    json = RestClient.post Smile::Base::BASE, params
+    json = RestClient.post( Smile::Base::BASE, params ).body
     
     json = JSON.parse( json )
     raise json["message"] if json["stat"] == 'fail'
@@ -165,7 +163,7 @@ class Smile::Photo < Smile::Base
     )
     
     params.merge!( options ) if( options )
-    json = RestClient.post Smile::Base::BASE, params
+    json = RestClient.post( Smile::Base::BASE, params ).body
     
     json = JSON.parse( json )
     raise json["message"] if json["stat"] == 'fail'
@@ -216,7 +214,7 @@ class Smile::Photo < Smile::Base
     )
     
     params.merge!( options ) if( options )
-    json = RestClient.post Smile::Base::BASE, params
+    json = RestClient.post( Smile::Base::BASE, params ).body
     
     json = JSON.parse( json )
     raise json["message"] if json["stat"] == 'fail'
