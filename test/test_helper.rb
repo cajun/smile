@@ -1,10 +1,8 @@
 require 'rubygems'
-require 'test/unit'
-require 'ruby-debug' 
+require 'shindo'
+require 'rr'
+
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'smile'
-
-class Test::Unit::TestCase
-end

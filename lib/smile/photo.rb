@@ -7,8 +7,8 @@ class Smile::Photo < Smile::Base
   
   class << self
     # Convert the given xml into photo objects to play with
-    def from_json( json, session_id )
-      result = JSON.parse( json )
+    def from_json( json )
+      result = Smile::Json.parse( json )
       
       result["Images"].map do |image_upper|
         image = upper_hash_to_lower_hash( image_upper )
@@ -17,9 +17,7 @@ class Smile::Photo < Smile::Base
         image.merge!( :album_id => image["album"]["id"] )
         image.delete( 'album' )
       
-        p = Smile::Photo.new( image )
-        p.session_id = session_id
-        p
+        Smile::Photo.new( image )
       end
     end
     
@@ -31,7 +29,6 @@ class Smile::Photo < Smile::Base
     # @option options [optional, String] :site_password password word for the site
     # @option options [optional, String] :image_key image key maybe?
     def find( options={} )
-      set_session if( session_id.nil? )
       options = Smile::ParamConverter.clean_hash_keys( options )
       
       params = default_params.merge(
@@ -40,7 +37,7 @@ class Smile::Photo < Smile::Base
       
       params.merge!( options ) if( options )
       json = RestClient.post( Smile::Base::BASE, params ).body
-      image_upper = JSON.parse( json )
+      image_upper = Smile::Json.parse( json )
       image = upper_hash_to_lower_hash( image_upper['Image'] )
       
       image.merge!( :image_id => image["id"] )
@@ -48,9 +45,7 @@ class Smile::Photo < Smile::Base
       image.merge!( :album_id => image["album"]["id"] )
       image.delete( 'album' )
       
-      p = Smile::Photo.new( image )
-      p.session_id = session_id
-      p
+      Smile::Photo.new( image )
     end
   end
   
@@ -106,8 +101,7 @@ class Smile::Photo < Smile::Base
     params.merge!( options ) if( options )
     json = RestClient.post( Smile::Base::BASE, params ).body
     
-    json = JSON.parse( json )
-    raise json["message"] if json["stat"] == 'fail'
+    json = Smile::Json.parse( json )
       
     image = upper_hash_to_lower_hash( json['Image'] )
     image.merge!( :image_id => image["id"] )
@@ -165,8 +159,7 @@ class Smile::Photo < Smile::Base
     params.merge!( options ) if( options )
     json = RestClient.post( Smile::Base::BASE, params ).body
     
-    json = JSON.parse( json )
-    raise json["message"] if json["stat"] == 'fail'
+    json = Smile::Json.parse( json )
       
     image = upper_hash_to_lower_hash( json['Image'] )
     image.merge!( :image_id => image["id"] )
@@ -216,8 +209,7 @@ class Smile::Photo < Smile::Base
     params.merge!( options ) if( options )
     json = RestClient.post( Smile::Base::BASE, params ).body
     
-    json = JSON.parse( json )
-    raise json["message"] if json["stat"] == 'fail'
+    json = Smile::Json.parse( json )
       
     image = upper_hash_to_lower_hash( json['Image'] )
     image.merge!( :image_id => image["id"] )

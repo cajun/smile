@@ -4,101 +4,27 @@ module Smile::ParamConverter
   def convert( param, value=nil )
     key = nil
     key = case param.to_s.downcase.to_sym
-      when :popular_category
-        :popularCategory
-      when :geo_all 
-        :geoAll
-      when :geo_keyword 
-        :geoKeyword
-      when :geo_search 
-        :geoSearch
-      when :geo_community
-        :geoCommunity 
-      when :open_search_keyword
-        :openSearchKeyword
-      when :user_keyword 
-        :userkeyword
-      when :nickname_recent 
-        :nicknameRecent
-      when :nickname_popular 
-        :nicknamePopular
-      when :user_comments 
-        :userComments
-      when :geo_user 
-        :geoUser
-      when :geo_album 
-        :geoAlbum
+      when :popular_category, :geo_all, :geo_keyword,
+        :geo_search, :geo_community, :open_search_keyword, :user_keyword,
+        :nickname_recent, :nickname_popular, :user_comments, :geo_user,
+        :geo_album
+        first_letter_downcase( param.to_s.classify ).to_sym
       when :size
         value = value.titlecase
         :Size
-      when :image_count
-        :ImageCount
       when :data, :type, :description, :keywords, :geography, :position, :header,
         :clean, :filenames, :password, :public, :external, :protected, :watermarking,
         :larges, :originals, :comments, :share, :printable, :backprinting
         param.to_s.upcase.to_sym
-      when :image_id
-        :ImageID
-      when :image_key
-        :ImageKey
-      when :image_count
-        :ImageCount
-      when :nickname, :nick_name
-        :NickName
-      when :category_id
-        :CategoryID
-      when :sub_categroy_id
-        :SubCategoryID
-      when :album_template_id
-        :AlbumTemplateID
-      when :highlight_id
-        :HighlightID
+      when :image_id, :image_key, :image_count, :nick_name, :category_id,
+        :sub_category_id, :album_template_id, :highlight_id, :square_thumbs,
+        :template_id, :sort_method, :sort_direction, :password_hint, :word_searchable,
+        :smug_searchable, :watermark_id, :hide_owner, :x_larges, :x2_larges, :x3_larges,
+        :can_rank, :friend_edit, :family_edit, :color_correction, :default_color, :proof_days,
+        :unsharp_amount, :unsharp_radius, :unsharp_sigma, :community_id
+        param.to_s.classify.to_sym
       when :exif
         :EXIF
-      when :square_thumbs
-        :Square_Thumbs
-      when :tempate_id
-        :TemplateID
-      when :sort_method
-        :SortMethod
-      when :sort_direction
-        :SortDirection
-      when :password_hint
-        :PasswordHint
-      when :word_searchable
-        :WordSearchable
-      when :smug_searchable
-        :SmugSearchable
-      when :watermark_id
-        :WatermarkID
-      when :hide_owner
-        :HideOwner
-      when :x_larges, :xlarges
-        :XLarges
-      when :x2_larges, :x2larges
-        :X2Larges
-      when :x3_larges, :x3larges
-        :X3Larges
-      when :can_rank
-        :CanRank
-      when :friend_edit
-        :FriendEdit
-      when :family_edit
-        :FamilyEdit
-      when :color_correction
-        :ColorCorrection
-      when :default_color
-        :DefaultColor
-      when :proof_days
-        :ProofDays
-      when :unsharp_amount
-        :UnsharpAmount
-      when :unsharp_radius
-        :UnsharpRadius
-      when :unsharp_sigma
-        :UnsharpSigma
-      when :community_id
-        :CommunityID
       else
         key = param
     end
@@ -113,5 +39,9 @@ module Smile::ParamConverter
     end if( hash_to_clean )
     cleaned_hash
   end
-  
+ 
+  def first_letter_downcase( stuff )
+    stuff.to_s.gsub( /^(\w)/, $1.downcase )
+  end
+
 end

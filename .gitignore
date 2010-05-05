@@ -11,4 +11,6 @@ rdoc/
 pkg/
 doc/
 
+*.gem
+.yardoc
 

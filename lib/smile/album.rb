@@ -1,4 +1,5 @@
 # The Album class will fetch any public/private album hosted on SmugMug.
+#
 # The Album Objects will have the following fields on the response
 #
 # Result
@@ -90,16 +91,14 @@ class Smile::Album < Smile::Base
   class << self
     # Converts the json results from the web service into 
     # Album object to use
-    def from_json( json, session_id )
-      result = JSON.parse( json )
+    def from_json( json )
+      result = Smile::Json.parse( json )
       result["Albums"].map do |album_upcase|
         album = upper_hash_to_lower_hash( album_upcase )
         
         album.merge!( :album_id => album["id"] )
         
-        a = Smile::Album.new( album )
-        a.session_id = session_id
-        a
+        Smile::Album.new( album )
       end
     end
     
@@ -121,14 +120,12 @@ class Smile::Album < Smile::Base
       
       json = RestClient.post( Smile::Base::BASE, params ).body
       
-      album_upper = JSON.parse(json)
+      album_upper = Smile::Json.parse(json)
     
       album = upper_hash_to_lower_hash( album_upper['Album'] )
       album.merge!( :album_id => album["id"] )
       
-      a = Smile::Album.new( album )
-      a.session_id = session_id
-      a
+      Smile::Album.new( album )
     end
     
     # Update the album from the following params
@@ -200,14 +197,13 @@ class Smile::Album < Smile::Base
           :method => 'smugmug.albums.create',
           :AlbumID => album_id
       )
+
       options = Smile::ParamConverter.clean_hash_keys( options )
       params.merge!( options ) if( options )
 
       json = RestClient.post( BASE, params ).body
-      json = JSON.parse( json )
-      raise json["message"] if json["stat"] == 'fail'
-      find( :album_id => json["Album"]["id"], :album_key => json["Album"]["key"] )
-      true
+      json = Smile::Json.parse( json )
+      self.from_json( json )
     end
   end
 
@@ -284,8 +280,8 @@ class Smile::Album < Smile::Base
     params.merge!( options ) if( options )
     
     json = RestClient.post( BASE, params ).body
-    json = JSON.parse( json )
-    raise json["message"] if json["stat"] == 'fail'
+    
+    json = Smile::Json.parse( json )
     true
   end
   
@@ -303,12 +299,13 @@ class Smile::Album < Smile::Base
         :AlbumKey => key,
         :Heavy => 1
     )
+
     options = Smile::ParamConverter.clean_hash_keys( options )
     params.merge!( options ) if( options )
     
     json = RestClient.post( BASE, params ).body
 
-    Smile::Photo.from_json( json, session_id )
+    Smile::Photo.from_json( json )
   end
   
   # Pull stats for an Album for a given Month and Year
@@ -329,9 +326,7 @@ class Smile::Album < Smile::Base
     params.merge!( options ) if( options )
     
     json = RestClient.post( Smile::Base::BASE, params ).body
-    
-    json = JSON.parse( json )
-    raise json["message"] if json["stat"] == 'fail'
+    json = Smile::Json.parse( json )
 
     stat = upper_hash_to_lower_hash( json['Album'] )
     OpenStruct.new( stat )
@@ -352,9 +347,9 @@ class Smile::Album < Smile::Base
       json = RestClient.put( UPLOAD + "/#{image}", File.read( image ),
         :content_length => File.size( image ),
         :content_md5 => MD5.hexdigest( File.read( image ) ),
-        :x_smug_sessionid => session_id,
+        :x_smug_sessionid => self.session.id,
         :x_smug_version => VERSION,
-        :x_smug_responseType => "JSON",
+        :x_smug_responseType => "Smile::Json",
         :x_smug_albumid => album_id,
         :x_smug_filename => File.basename( image ),
         :x_smug_caption => options[:caption],
@@ -363,14 +358,14 @@ class Smile::Album < Smile::Base
         :x_smug_longitude => options[:longitude],
         :x_smug_altitude => options[:altitude] ).body
       
-      image = JSON.parse( json )
+      image = Smile::Json.parse( json )
       if( image && image["Image"] && image["Image"]["id"] )
         Smile::Photo.find( :image_id => image["Image"]["id"] )
       else
-        raise Exception.new( "Failed to upload #{image}" )
+        raise Smile::Exception.new( "Failed to upload #{image}" )
       end
     else
-      raise Exception.new( "Cannot find file #{image}." )
+      raise Smile::Exception.new( "Cannot find file #{image}." )
     end
   end
   
@@ -382,16 +377,10 @@ class Smile::Album < Smile::Base
     )
     
     options = Smile::ParamConverter.clean_hash_keys( options )
-    
     params.merge!( options ) if( options )
-    
     json = RestClient.post( Smile::Base::BASE, params ).body
+    json = Smile::Json.parse( json )
     
-    json = JSON.parse( json )
-    raise json["message"] if json["stat"] == 'fail'
-    
-    album_id = nil
-    album_key = nil
     nil
   end
   
@@ -407,11 +396,7 @@ class Smile::Album < Smile::Base
     
     json = RestClient.post( Smile::Base::BASE, params ).body
     
-    json = JSON.parse( json )
-    raise json["message"] if json["stat"] == 'fail'
-    
-    album_id = nil
-    album_key = nil
+    json = Smile::Json.parse( json )
     nil
   end
   

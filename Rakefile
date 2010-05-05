@@ -1,7 +1,51 @@
 require 'rubygems'
 require 'rake'
-require 'metric_fu'
-require 'config/metric_fu_config'
+require 'date'
+
+#############################################################################
+##
+## Helper functions
+##
+##############################################################################
+
+def name
+  @name ||= Dir['*.gemspec'].first.split('.').first
+end
+
+def version
+  line = File.read("lib/#{name}.rb")[/^\s*VERSION\s*=\s*.*/]
+  line.match(/.*VERSION\s*=\s*['"](.*)['"]/)[1]
+end
+
+def date
+  Date.today.to_s
+end
+
+def rubyforge_project
+  name
+end
+
+def gemspec_file
+  "#{name}.gemspec"
+end
+
+def gem_file
+  "#{name}-#{version}.gem"
+end
+
+def replace_header(head, header_name)
+  head.sub!(/(\.#{header_name}\s*= ').*'/) { "#{$1}#{send(header_name)}'"}
+end
+
+desc "Open an irb session preloaded with this library"
+task :console do
+    sh "irb -rubygems -r ./lib/#{name}.rb"
+end
+
+desc "Run Shindo rake tasks"
+task :test do
+  sh "shindo #{Dir.glob( 'test/**/*_test.rb' ).join(' ')}"
+end
 
 begin
   require 'jeweler'
@@ -22,56 +66,7 @@ rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
 
-# These are new tasks
-# These are new tasks
-begin
-  require 'rake/contrib/sshpublisher'
-  namespace :rubyforge do
-
-    desc "Release gem and RDoc documentation to RubyForge"
-    task :release => ["rubyforge:release:gem", "rubyforge:release:docs"]
-
-    namespace :release do
-      desc "Publish RDoc to RubyForge."
-      task :docs => [:rdoc] do
-        config = YAML.load(
-            File.read(File.expand_path('~/.rubyforge/user-config.yml'))
-        )
-
-        host = "#{config['username']}@rubyforge.org"
-        remote_dir = "/var/www/gforge-projects/cajun-gems/"
-        local_dir = 'rdoc'
-
-        Rake::SshDirPublisher.new(host, remote_dir, local_dir).upload
-      end
-    end
-  end
-rescue LoadError
-  puts "Rake SshDirPublisher is unavailable or your rubyforge environment is not configured."
-end
-
-require 'rake/testtask'
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/*_test.rb'
-  test.verbose = true
-end
-
-begin
-  require 'rcov/rcovtask'
-  Rcov::RcovTask.new do |test|
-    test.libs << 'test'
-    test.pattern = 'test/**/*_test.rb'
-    test.verbose = true
-  end
-rescue LoadError
-  task :rcov do
-    abort "RCov is not available. In order to run rcov, you must: sudo gem install spicycode-rcov"
-  end
-end
-
-
-task :default => :test
+task :default => :test 
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|

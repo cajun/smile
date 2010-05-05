@@ -21,13 +21,11 @@ module Smile
         :Password => pass
       )
 
-      json = RestClient.post( BASE, params ).body
-      result = JSON.parse( json )
+      json = RestClient.post( BASE_SECURE, params ).body
+      result = Smile::Json.parse( json )
       
-      self.session_id = result["Login"]["Session"]["id"]
+      self.session.id = result["Login"]["Session"]["id"]
       result
-    rescue NoMethodError => e
-      nil
     end
 
     # Login to SmugMug using an anonymously account
@@ -39,12 +37,10 @@ module Smile
         :method => 'smugmug.login.anonymously'
       )
 
-      json = RestClient.post( BASE, params ).body
-      result = JSON.parse( json )
-      self.session_id = result["Login"]["Session"]["id"]
+      json = RestClient.post( BASE_SECURE, params ).body
+      result = Smile::Json.parse( json )
+      self.session.id = result["Login"]["Session"]["id"]
       result
-    rescue NoMethodError => e
-      nil
     end
 
     # Close the session
@@ -81,9 +77,7 @@ module Smile
       params = params.merge( options ) if( options )
       json = RestClient.post( BASE, params ).body
 
-      Smile::Album.from_json( json, session_id )
-    rescue
-      nil
+      Smile::Album.from_json( json )
     end
   end
 end

@@ -1,63 +1,75 @@
 require File.dirname(__FILE__) + '/test_helper'
 
-class SmileTest < Test::Unit::TestCase
-  def setup
+Shindo.tests 'checking all the cool things smile can do'  do
+  extend RR::Adapters::RRMethods
+  before do
+    Smile::Base.configure do |config|
+      config.logger_on = true
+    end
+
     @smug = Smile::Smug.new
     @smug.auth_anonymously
   end
-  
-  def test_auth
-    assert_not_nil( @smug.auth_anonymously )
-  end
-  
-  def test_have_albums
-    assert_nothing_raised(Exception) do
-      assert_not_nil( @smug.albums( :nick_name => 'kleinpeter' ) )
+
+  tests 'security checks', ['security'] do
+    test( 'testing basic auth anonymously' ) { @smug.auth_anonymously }
+
+    test 'InvalidLogin will get raised on foo bar login' do
+      all_good = false
+      begin
+      Smile.auth( 'foo', 'and mo bar' )
+      rescue Smile::Exception => ex
+        all_good = true
+      end
+
+      all_good
     end
   end
-  
-  def test_have_photos
-    assert_nothing_raised(Exception) do
+
+  tests 'album and photo checks' do
+    test( 'checking to see if we have some albums', ['album']) { @smug.albums( :nick_name => 'kleinpeter' ) }
+
+    test 'checking to see if we have photos in the albums', ['album'] do 
       album = @smug.albums( :nick_name => 'kleinpeter' ).first
-      assert_not_nil( album.photos )
+      !album.photos.empty?
     end
-  end
-  
-  def test_photo_has_album
-    assert_nothing_raised(Exception) do
-      album = @smug.albums( :nick_name => 'kleinpeter' ).first
-      photo = album.photos.first
-      assert_equal( album.album_id, photo.album.album_id )
-      assert_equal( album.key, photo.album.key )
-    end
-  end
-  
-  def test_photo_has_album_has_photo
-    assert_nothing_raised(Exception) do
+
+    test 'a photo is connected to its album', ['photo'] do
       album = @smug.albums( :nick_name => 'kleinpeter' ).first
       photo = album.photos.first
-      alt_photo = photo.album.photos.first
-      
-      assert_equal( photo.image_id, alt_photo.image_id )
+      album.album_id == photo.album.album_id && 
+      album.key == photo.album.key 
     end
   end
   
-  # NOTE have to be logged in to test this one
-  # def test_album_stats
-  #   assert_nothing_raised(Exception) do
-  #     album = @smug.albums( :nick_name => 'kleinpeter' ).first
-  #     assert_not_nil( album.stats )
-  #   end
-  # end
-  
-  def test_photo_extras
-    assert_nothing_raised(Exception) do
-      album = @smug.albums( :nick_name => 'kleinpeter' ).first
-      photo = album.photos.first
-      
-      assert_not_nil( photo.details )
-      assert_not_nil( photo.info )
-      assert_not_nil( photo.urls )
+  tests 'confirm configuration settings', ['config'] do
+    test 'there is a default api key' do
+      Smile::Base.api_key
+    end
+
+    test 'we can set the api key in the config' do
+      Smile::Base.configure do |config|
+        config.api_key = 'foo'
+      end
+
+      Smile::Base.api_key
+    end
+  end
+
+  tests 'there is a logger and it does stuff' do 
+    test 'the logger is off by default', ['log'] do
+      Smile::Base.clear_config!
+      !Smile::Base.logger_on?
+    end
+  end
+
+  tests 'looking now at the exception classes', ['exceptions'] do
+    test 'exceptions should log errors' do
+      @@error_got_called = false
+      mock(Smile::Base.logger).error( 'foo' ) { @@error_got_called = true }
+      Smile::Exception.new( 'foo' )
+      @@error_got_called
     end
   end
 end
+

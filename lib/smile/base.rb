@@ -15,22 +15,38 @@ module Smile
     VERSION = '1.2.0'
     
     class << self
-      attr_accessor :session_id
-      # This will be included in every request once you have logged in
-      def default_params
-        base = { :APIKey => API }
-        if( session_id )
-          base.merge!( :SessionID => session_id )
-        end
-        base
+      attr_accessor :api_key, :logger_on  
+      attr_reader :log
+      
+      def configure
+        yield( self ) 
+      end
+
+      def session
+        @session ||= Session.instance
+      end
+
+      def api_key
+        @api_key || 'HSoqGCJ8ilF42BeThMGDZqqqOgj1eXqN'
+      end
+
+      def logger
+        @log ||= Logger.new( STDOUT )
+      end
+
+      def logger_on?
+        @logger_on
+      end
+
+      def clear_config!
+        @api_key, @log, @logger_on = nil,nil,nil
       end
       
-      def set_session
-        if( session_id.nil? )
-          smug = Smug.new
-          smug.auth_anonymously
-          self.session_id = smug.session_id
-        end
+      # This will be included in every request once you have logged in
+      def default_params
+        @base ||= { :APIKey => API }
+        @base.merge!( :SessionID => session.id ) if( session.id )
+        @base
       end
       
       def upper_hash_to_lower_hash( upper )
@@ -47,9 +63,12 @@ module Smile
       
     end
     
-    attr_accessor :session_id
+
+    def session
+      self.class.session
+    end
+
     def default_params
-      self.class.session_id = self.session_id
       self.class.default_params
     end
 
