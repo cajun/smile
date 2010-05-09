@@ -92,12 +92,10 @@ class Smile::Album < Smile::Base
     # Converts the json results from the web service into 
     # Album object to use
     def from_json( json )
-      result = Smile::Json.parse( json )
-      result["Albums"].map do |album_upcase|
-        album = upper_hash_to_lower_hash( album_upcase )
-        
+      json["albums"].map do |album_upper|
+        album = upper_hash_to_lower_hash( album_upper )
         album.merge!( :album_id => album["id"] )
-        
+
         Smile::Album.new( album )
       end
     end
@@ -111,18 +109,9 @@ class Smile::Album < Smile::Base
     # @param options [optional, String] :password password for the albums
     # @param options [optional, String] :site_password password for the site
     def find( options={} )
-      params = default_params.merge(
-          :method => 'smugmug.albums.getInfo'
-      )
+      json = web_method_call( { :method => 'smugmug.albums.getInfo' }, options )
       
-      options = Smile::ParamConverter.clean_hash_keys( options )
-      params.merge!( options ) if( options )
-      
-      json = RestClient.post( Smile::Base::BASE, params ).body
-      
-      album_upper = Smile::Json.parse(json)
-    
-      album = upper_hash_to_lower_hash( album_upper['Album'] )
+      album = json['album'] 
       album.merge!( :album_id => album["id"] )
       
       Smile::Album.new( album )
@@ -193,16 +182,8 @@ class Smile::Album < Smile::Base
     # Community
     # @option options [optional, Fixnum] :community_id ( 0 ) join the group
     def create( title, options )
-      params = default_params.merge(
-          :method => 'smugmug.albums.create',
-          :AlbumID => album_id
-      )
+      json = web_method_call( { :method => 'smugmug.albums.create', :AlbumID => album_id })
 
-      options = Smile::ParamConverter.clean_hash_keys( options )
-      params.merge!( options ) if( options )
-
-      json = RestClient.post( BASE, params ).body
-      json = Smile::Json.parse( json )
       self.from_json( json )
     end
   end
@@ -272,16 +253,8 @@ class Smile::Album < Smile::Base
   # Community
   # @option options [optional, Fixnum] :community_id join the group
   def update( options )
-    params = default_params.merge(
-        :method => 'smugmug.albums.changeSettings',
-        :AlbumID => album_id
-    )
-    options = Smile::ParamConverter.clean_hash_keys( options )
-    params.merge!( options ) if( options )
-    
-    json = RestClient.post( BASE, params ).body
-    
-    json = Smile::Json.parse( json )
+    json = web_method_call( { :method => 'smugmug.albums.changeSettings', :AlbumID => album_id } )
+
     true
   end
   
@@ -293,18 +266,15 @@ class Smile::Album < Smile::Base
   # @option options [optional, string] :password password for the pics
   # @option options [optional, string] :site_password access via site password
   def photos( options=nil )
-    params = default_params.merge(
+    json = web_method_call(
+        {
         :method => 'smugmug.images.get',
-        :AlbumID => album_id,
-        :AlbumKey => key,
+        :AlbumID => self.album_id,
+        :AlbumKey => self.key,
         :Heavy => 1
+        },
+        options
     )
-
-    options = Smile::ParamConverter.clean_hash_keys( options )
-    params.merge!( options ) if( options )
-    
-    json = RestClient.post( BASE, params ).body
-
     Smile::Photo.from_json( json )
   end
   
@@ -315,21 +285,12 @@ class Smile::Album < Smile::Base
   # @option options [optional, Fixnum] :year (Date.today.year) the year and stuff
   # @option options [optional, 1 or 0] :heavy more details
   def stats( options =nil )
-    params = default_params.merge( 
-      :method => 'smugmug.albums.getStats',
-      :AlbumID => album_id,
-      :month => Date.today.month,
-      :year => Date.today.year
+    json = web_method_call( 
+      { :method => 'smugmug.albums.getStats', :AlbumID => album_id, :month => Date.today.month, :year => Date.today.year },
+      options
     )
-    options = Smile::ParamConverter.clean_hash_keys( options )
-    
-    params.merge!( options ) if( options )
-    
-    json = RestClient.post( Smile::Base::BASE, params ).body
-    json = Smile::Json.parse( json )
 
-    stat = upper_hash_to_lower_hash( json['Album'] )
-    OpenStruct.new( stat )
+    OpenStruct.new( json['album'] )
   end
   
   # Add an image or vid to the existing album
@@ -359,8 +320,8 @@ class Smile::Album < Smile::Base
         :x_smug_altitude => options[:altitude] ).body
       
       image = Smile::Json.parse( json )
-      if( image && image["Image"] && image["Image"]["id"] )
-        Smile::Photo.find( :image_id => image["Image"]["id"] )
+      if( image && image["image"] && image["image"]["id"] )
+        Smile::Photo.find( :image_id => image["image"]["id"] )
       else
         raise Smile::Exception.new( "Failed to upload #{image}" )
       end
@@ -371,16 +332,8 @@ class Smile::Album < Smile::Base
   
   # Want to get rid of that album?  Call this guy and see what gets removed!
   def delete!
-    params = default_params.merge( 
-      :method => 'smugmug.albums.delete',
-      :AlbumID => album_id
-    )
-    
-    options = Smile::ParamConverter.clean_hash_keys( options )
-    params.merge!( options ) if( options )
-    json = RestClient.post( Smile::Base::BASE, params ).body
-    json = Smile::Json.parse( json )
-    
+    json = web_method_call( { :method => 'smugmug.albums.delete', :AlbumID => album_id })
+
     nil
   end
   
@@ -389,14 +342,8 @@ class Smile::Album < Smile::Base
   # @option options [String] :by valid values: FileName, Caption, DateTime
   # @option options [String] :direction valid values: ASC, DESC
   def resort!( options =nil )
-    params = default_params.merge( 
-      :method => 'smugmug.albums.reSort',
-      :AlbumID => album_id
-    )
-    
-    json = RestClient.post( Smile::Base::BASE, params ).body
-    
-    json = Smile::Json.parse( json )
+    json = web_method_call( { :method => 'smugmug.albums.reSort', :AlbumID => album_id }, options)
+
     nil
   end
   

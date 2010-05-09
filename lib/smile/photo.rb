@@ -8,15 +8,13 @@ class Smile::Photo < Smile::Base
   class << self
     # Convert the given xml into photo objects to play with
     def from_json( json )
-      result = Smile::Json.parse( json )
-      
-      result["Images"].map do |image_upper|
+      json["images"].map do |image_upper|
         image = upper_hash_to_lower_hash( image_upper )
         image.merge!( :image_id => image["id"] )
         image.merge!( :album_key => image["album"]["key"] )
         image.merge!( :album_id => image["album"]["id"] )
         image.delete( 'album' )
-      
+
         Smile::Photo.new( image )
       end
     end
@@ -29,16 +27,10 @@ class Smile::Photo < Smile::Base
     # @option options [optional, String] :site_password password word for the site
     # @option options [optional, String] :image_key image key maybe?
     def find( options={} )
-      options = Smile::ParamConverter.clean_hash_keys( options )
-      
-      params = default_params.merge(
-          :method => 'smugmug.images.getInfo'
+      image = web_method_call(
+          { :method => 'smugmug.images.getInfo' },
+          options
       )
-      
-      params.merge!( options ) if( options )
-      json = RestClient.post( Smile::Base::BASE, params ).body
-      image_upper = Smile::Json.parse( json )
-      image = upper_hash_to_lower_hash( image_upper['Image'] )
       
       image.merge!( :image_id => image["id"] )
       image.merge!( :album_key => image["album"]["key"] )
@@ -92,18 +84,11 @@ class Smile::Photo < Smile::Base
   # @option options [String] :password a password field
   # @option options [String] :site_password site password field
   def details( options =nil )
-    params = default_params.merge(
-      :method => "smugmug.images.getEXIF",
-      :ImageID => self.image_id,
-      :ImageKey => self.key
+    image = web_method_call(
+      { :method => "smugmug.images.getEXIF", :ImageID => self.image_id, :ImageKey => self.key },
+      options
     )
     
-    params.merge!( options ) if( options )
-    json = RestClient.post( Smile::Base::BASE, params ).body
-    
-    json = Smile::Json.parse( json )
-      
-    image = upper_hash_to_lower_hash( json['Image'] )
     image.merge!( :image_id => image["id"] )
     
     OpenStruct.new( image )
@@ -150,18 +135,11 @@ class Smile::Photo < Smile::Base
   # integer "id"
   # String "Key"
   def info( options =nil )
-    params = default_params.merge(
-      :method => "smugmug.images.getInfo",
-      :ImageID => self.image_id,
-      :ImageKey => self.key
+    image = web_method_call(
+      { :method => "smugmug.images.getInfo", :ImageID => self.image_id, :ImageKey => self.key },
+      options
     )
-    
-    params.merge!( options ) if( options )
-    json = RestClient.post( Smile::Base::BASE, params ).body
-    
-    json = Smile::Json.parse( json )
       
-    image = upper_hash_to_lower_hash( json['Image'] )
     image.merge!( :image_id => image["id"] )
     
     OpenStruct.new( image )  
@@ -200,24 +178,17 @@ class Smile::Photo < Smile::Base
   # String "X3LargeURL" (if available)
   # String "OriginalURL" (if available)
   def urls( options =nil )
-    params = default_params.merge(
-      :method => "smugmug.images.getURLs",
-      :ImageID => self.image_id,
-      :ImageKey => self.key
+    image = web_method_call(
+      { :method => "smugmug.images.getURLs", :ImageID => self.image_id, :ImageKey => self.key },
+      options
     )
-    
-    params.merge!( options ) if( options )
-    json = RestClient.post( Smile::Base::BASE, params ).body
-    
-    json = Smile::Json.parse( json )
       
-    image = upper_hash_to_lower_hash( json['Image'] )
     image.merge!( :image_id => image["id"] )
     
     OpenStruct.new( image )  
   end
   
   def album
-    Smile::Album.find( :AlbumID => album_id, :AlbumKey => album_key )
+    Smile::Album.find( :AlbumID => self.album_id, :AlbumKey => self.album_key )
   end
 end

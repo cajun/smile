@@ -15,17 +15,12 @@ module Smile
     #
     # @return [Smile::SmugMug.new] An Smug object that has been authenticated
     def auth( email, pass )
-     params = default_params.merge(
-        :method => 'smugmug.login.withPassword',
-        :EmailAddress => email,
-        :Password => pass
+     json = web_method_call(
+        { :method => 'smugmug.login.withPassword', :EmailAddress => email, :Password => pass }
       )
 
-      json = RestClient.post( BASE_SECURE, params ).body
-      result = Smile::Json.parse( json )
-      
-      self.session.id = result["Login"]["Session"]["id"]
-      result
+      self.session.id = json["login"]["session"]["id"]
+      json
     end
 
     # Login to SmugMug using an anonymously account
@@ -33,23 +28,15 @@ module Smile
     #
     # @return [Smile::SmugMug.new] An Smug object that has been authenticated
     def auth_anonymously
-      params = default_params.merge(
-        :method => 'smugmug.login.anonymously'
-      )
+      json = web_method_call( { :method => 'smugmug.login.anonymously' } )
 
-      json = RestClient.post( BASE_SECURE, params ).body
-      result = Smile::Json.parse( json )
-      self.session.id = result["Login"]["Session"]["id"]
-      result
+      self.session.id = json["login"]["session"]["id"]
+      json 
     end
 
     # Close the session
     def logout
-      params = default_params.merge(
-        :method => 'smugmug.logout'
-      )
-
-      RestClient.post( BASE, params ).body
+      web_method_call( { :method => 'smugmug.logout' } )
     end
 
     
@@ -68,14 +55,10 @@ module Smile
     # 
     # @see Smug::Album#new For more information about heavy ( true and false ) responces
     def albums( options=nil )
-      params = default_params.merge( 
-        :method => 'smugmug.albums.get',
-        :heavy => 1
+      json = web_method_call( 
+        { :method => 'smugmug.albums.get', :heavy => 1 },
+        options
       )      
-
-      options = Smile::ParamConverter.clean_hash_keys( options )
-      params = params.merge( options ) if( options )
-      json = RestClient.post( BASE, params ).body
 
       Smile::Album.from_json( json )
     end

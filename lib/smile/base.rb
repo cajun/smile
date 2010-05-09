@@ -17,7 +17,7 @@ module Smile
     class << self
       attr_accessor :api_key, :logger_on  
       attr_reader :log
-      
+
       def configure
         yield( self ) 
       end
@@ -49,6 +49,21 @@ module Smile
         @base
       end
       
+      # This is the base work that will need to be done on ALL 
+      # web calls.  Given a set of web options and other params
+      # call the web service and convert it to json
+      def web_method_call( web_options, options = {} )
+        params = default_params.merge( web_options )
+        options = Smile::ParamConverter.clean_hash_keys( options )
+        params.merge!( options ) if( options )
+
+        # logger.info( "Web Service Call" )
+        # logger.info( params.inspect )
+
+        json = RestClient.post( BASE, params ).body
+        upper_hash_to_lower_hash(Smile::Json.parse( json ) )
+      end
+
       def upper_hash_to_lower_hash( upper )
         if( Hash === upper )
           lower ={}
@@ -63,7 +78,10 @@ module Smile
       
     end
     
-
+    def web_method_call( web_options, options = {} )
+      self.class.web_method_call(web_options,options)
+    end
+    
     def session
       self.class.session
     end
@@ -74,6 +92,10 @@ module Smile
 
     def upper_hash_to_lower_hash( hash )
       self.class.upper_hash_to_lower_hash( hash )
+    end
+
+    def logger
+      self.class.logger
     end
   end
 end

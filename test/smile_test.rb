@@ -17,7 +17,7 @@ Shindo.tests 'checking all the cool things smile can do'  do
     test 'InvalidLogin will get raised on foo bar login' do
       all_good = false
       begin
-      Smile.auth( 'foo', 'and mo bar' )
+        Smile.auth( 'foo', 'and mo bar' )
       rescue Smile::Exception => ex
         all_good = true
       end
@@ -27,7 +27,9 @@ Shindo.tests 'checking all the cool things smile can do'  do
   end
 
   tests 'album and photo checks' do
-    test( 'checking to see if we have some albums', ['album']) { @smug.albums( :nick_name => 'kleinpeter' ) }
+    test( 'checking to see if we have some albums', ['album']) do 
+      @smug.albums( :nick_name => 'kleinpeter' ) 
+    end
 
     test 'checking to see if we have photos in the albums', ['album'] do 
       album = @smug.albums( :nick_name => 'kleinpeter' ).first
