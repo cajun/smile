@@ -2,9 +2,12 @@ require File.dirname(__FILE__) + '/test_helper'
 
 Shindo.tests 'checking all the cool things smile can do'  do
   extend RR::Adapters::RRMethods
+
   before do
+    # this resets the config to the base state before every test
+    Smile::Base.clear_config!
     Smile::Base.configure do |config|
-      config.logger_on = true
+      # config.logger_on = true
     end
 
     @smug = Smile::Smug.new
@@ -30,7 +33,9 @@ Shindo.tests 'checking all the cool things smile can do'  do
     test( 'checking to see if we have some albums', ['album']) do 
       @smug.albums( :nick_name => 'kleinpeter' ) 
     end
-
+    
+    test( 'we can reload albums from the site', ['album']) 
+    
     test 'checking to see if we have photos in the albums', ['album'] do 
       album = @smug.albums( :nick_name => 'kleinpeter' ).first
       !album.photos.empty?
@@ -46,7 +51,7 @@ Shindo.tests 'checking all the cool things smile can do'  do
   
   tests 'confirm configuration settings', ['config'] do
     test 'there is a default api key' do
-      Smile::Base.api_key
+      Smile::Base.session.api_key
     end
 
     test 'we can set the api key in the config' do
@@ -54,7 +59,7 @@ Shindo.tests 'checking all the cool things smile can do'  do
         config.api_key = 'foo'
       end
 
-      Smile::Base.api_key
+      Smile::Base.session.api_key
     end
   end
 

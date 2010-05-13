@@ -1,89 +1,71 @@
 # The Album class will fetch any public/private album hosted on SmugMug.
 #
-# The Album Objects will have the following fields on the response
+# the album objects will have the following fields on the response
 #
-# Result
+# result
 #
-# STANDARD RESPONSE
+# standard response
 # 
-# array Albums
-#   Album
-#     integer id
-#     string Key
-#     string Title
-#     struct Category
-#       string id
-#       string Name
-#     string id
-#     string Name
-#     struct SubCategory
-#       string id
-#       string Name
-#     string id
-#     string Name
+# 
+# Album
+#   album_id
+#   album_key
+#   title
+#   category { id,  name }
+#   subcategory { id, name }
 #
-# HEAVY RESPONSE
+# HEAVY RESPONSE ( DEFAULT )
 #   
-# array Albums
-#   Album
-#     integer id
-#     string Key
-#     string Title
-#     struct Category
-#       string id
-#       string Name
-#     struct SubCategory
-#       string id
-#       string Name
-#     string Description
-#     string Keywords
-#     boolean Geography (owner)
-#     integer Position
-#     struct Hightlight (owner)
-#       string id
-#     integer ImageCount
-#     string LastUpdated
-#     boolean Header (owner, power & pro only)
-#     boolean Clean (owner)
-#     boolean EXIF (owner)
-#     boolean Filenames (owner)
-#     struct Template (owner)
-#       string id
-#     string SortMethod (owner)
-#     boolean SortDirection (owner)
-#     string Password (owner)
-#     string PasswordHint (owner)
-#     boolean Public (owner)
-#     boolean WorldSearchable (owner)
-#     boolean SmugSearchable (owner)
-#     boolean External (owner)
-#     boolean Protected (owner, power & pro only)
-#     boolean Watermarking (owner, pro only)
-#     struct Watermark (owner, pro only)
-#       string id
-#     boolean HideOwner (owner)
-#     boolean Larges (owner, pro only)
-#     boolean XLarges (owner, pro only)
-#     boolean X2Larges (owner)
-#     boolean X3Larges (owner)
-#     boolean Originals (owner)
-#     boolean CanRank (owner)
-#     boolean FriendEdit (owner)
-#     boolean FamilyEdit (owner)
-#     boolean Comments (owner)
-#     boolean Share (owner)
-#     boolean Printable (owner)
-#     int ColorCorrection (owner)
-#     boolean DefaultColor (owner, pro only)  deprecated
-#     integer ProofDays (owner, pro only)
-#     string Backprinting (owner, pro only)
-#     float UnsharpAmount (owner, power & pro only)
-#     float UnsharpRadius (owner, power & pro only)
-#     float UnsharpThreshold (owner, power & pro only)
-#     float UnsharpSigma (owner, power & pro only)
-#     struct Community (owner)
-#       string id
-#    
+# Album
+#   album_id
+#   album_key
+#   title
+#   category { id,  name }
+#   subcategory { id, name }
+#   string description
+#   string keywords
+#   boolean geography (owner)
+#   integer position
+#   struct hightlight (owner) { id }
+#   integer imagecount
+#   string lastupdated
+#   boolean header (owner, power & pro only)
+#   boolean clean (owner)
+#   boolean exif (owner)
+#   boolean filenames (owner)
+#   struct template (owner) { id }
+#   string sortmethod (owner)
+#   boolean sortdirection (owner)
+#   string password (owner)
+#   string passwordhint (owner)
+#   boolean public (owner)
+#   boolean worldsearchable (owner)
+#   boolean smugsearchable (owner)
+#   boolean external (owner)
+#   boolean protected (owner, power & pro only)
+#   boolean watermarking (owner, pro only)
+#   struct watermark (owner, pro only) { id }
+#   boolean hideowner (owner)
+#   boolean larges (owner, pro only)
+#   boolean xlarges (owner, pro only)
+#   boolean x2larges (owner)
+#   boolean x3larges (owner)
+#   boolean originals (owner)
+#   boolean canrank (owner)
+#   boolean friendedit (owner)
+#   boolean familyedit (owner)
+#   boolean comments (owner)
+#   boolean share (owner)
+#   boolean printable (owner)
+#   int colorcorrection (owner)
+#   integer proofdays (owner, pro only)
+#   string backprinting (owner, pro only)
+#   float unsharpamount (owner, power & pro only)
+#   float unsharpradius (owner, power & pro only)
+#   float unsharpthreshold (owner, power & pro only)
+#   float unsharpsigma (owner, power & pro only)
+#   struct community (owner) id
+#   
 #  @author Zac Kleinpeter 
 #  @date 2009-04-28.
 class Smile::Album < Smile::Base
@@ -268,10 +250,10 @@ class Smile::Album < Smile::Base
   def photos( options=nil )
     json = web_method_call(
         {
-        :method => 'smugmug.images.get',
-        :AlbumID => self.album_id,
-        :AlbumKey => self.key,
-        :Heavy => 1
+          :method => 'smugmug.images.get',
+          :AlbumID => self.album_id,
+          :AlbumKey => self.key,
+          :Heavy => 1
         },
         options
     )
@@ -347,7 +329,16 @@ class Smile::Album < Smile::Base
     nil
   end
   
+  def reload!
+    replace_with = Smile::Album.find(self.album_id, self.album_key )
+#    self = replace_with
+  end
+
   def category
     ['category']
+  end
+
+  def subcategory
+    ['subcategory']
   end
 end

@@ -1,5 +1,6 @@
 # Files
 *.swp
+*.swo
 *.jpg
 .DS_Store
 
