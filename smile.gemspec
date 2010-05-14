@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{smile}
-  s.version = "0.3.1"
+  s.version = "0.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["cajun"]
-  s.date = %q{2010-04-17}
+  s.date = %q{2010-05-13}
   s.default_executable = %q{smile}
   s.email = %q{zac@kleinpeter.org}
   s.executables = ["smile"]
@@ -23,12 +23,15 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION.yml",
-     "config/metric_fu_config.rb",
      "lib/smile.rb",
      "lib/smile/album.rb",
      "lib/smile/base.rb",
+     "lib/smile/common.rb",
+     "lib/smile/exception.rb",
+     "lib/smile/json.rb",
      "lib/smile/param_converter.rb",
      "lib/smile/photo.rb",
+     "lib/smile/session.rb",
      "lib/smile/smug.rb",
      "smile.gemspec",
      "test/smile_test.rb",

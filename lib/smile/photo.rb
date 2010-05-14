@@ -32,6 +32,9 @@ class Smile::Photo < Smile::Base
           options
       )
       
+      image = image['image']
+      logger.info( image )
+
       image.merge!( :image_id => image["id"] )
       image.merge!( :album_key => image["album"]["key"] )
       image.merge!( :album_id => image["album"]["id"] )
@@ -189,6 +192,11 @@ class Smile::Photo < Smile::Base
   end
   
   def album
-    Smile::Album.find( :AlbumID => self.album_id, :AlbumKey => self.album_key )
+    @album ||= Smile::Album.find( :AlbumID => self.album_id, :AlbumKey => self.album_key )
+  end
+
+  def reload!
+    @attributes = Smile::Photo.find( { :ImageID => self.image_id, :ImageKey => self.key } ).attributes
+    self
   end
 end

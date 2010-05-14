@@ -31,6 +31,19 @@ module Smile
       upper_hash_to_lower_hash(Smile::Json.parse( json ) )
     end
 
+    # This is the base work that will need to be done on ALL 
+    # web calls.  Given a set of web options and other params
+    # call the web service and convert it to json
+    def secure_web_method_call( web_options, options = {} )
+      params = default_params.merge( web_options )
+      options = Smile::ParamConverter.clean_hash_keys( options )
+      params.merge!( options ) if( options )
+
+      logger.info( params.inspect )
+
+      json = RestClient.post( BASE_SECURE, params ).body
+      upper_hash_to_lower_hash(Smile::Json.parse( json ) )
+    end
     # This converts a hash that has mixed case
     # into all lower case
     def upper_hash_to_lower_hash( upper )

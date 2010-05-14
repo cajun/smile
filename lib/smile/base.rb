@@ -6,9 +6,10 @@
 #  Copyright 2009 Cajun Country. All rights reserved.
 # 
 module Smile
-  class Base < OpenStruct
+  class Base 
     include Smile::Common
-
+    attr_accessor :attributes
+    
     class << self
       include Smile::Common
 
@@ -21,5 +22,12 @@ module Smile
       end
     end
 
+    def initialize( options={} )
+      @attributes = OpenStruct.new( options )
+    end
+
+    def method_missing( name, *args )
+      @attributes.send(name,args)
+    end
   end
 end

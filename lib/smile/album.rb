@@ -77,6 +77,7 @@ class Smile::Album < Smile::Base
       json["albums"].map do |album_upper|
         album = upper_hash_to_lower_hash( album_upper )
         album.merge!( :album_id => album["id"] )
+        album.merge!( :album_key => album["key"] )
 
         Smile::Album.new( album )
       end
@@ -95,6 +96,7 @@ class Smile::Album < Smile::Base
       
       album = json['album'] 
       album.merge!( :album_id => album["id"] )
+      album.merge!( :album_key => album["key"] )
       
       Smile::Album.new( album )
     end
@@ -330,12 +332,12 @@ class Smile::Album < Smile::Base
   end
   
   def reload!
-    replace_with = Smile::Album.find(self.album_id, self.album_key )
-#    self = replace_with
+    @attributes = Smile::Album.find( { :AlbumID => self.album_id } ).attributes
+    self
   end
 
   def category
-    ['category']
+    @attributes['category']
   end
 
   def subcategory

@@ -15,7 +15,7 @@ module Smile
     #
     # @return [Smile::SmugMug.new] An Smug object that has been authenticated
     def auth( email, pass )
-     json = web_method_call(
+     json = secure_web_method_call(
         { :method => 'smugmug.login.withPassword', :EmailAddress => email, :Password => pass }
       )
 
@@ -28,7 +28,7 @@ module Smile
     #
     # @return [Smile::SmugMug.new] An Smug object that has been authenticated
     def auth_anonymously
-      json = web_method_call( { :method => 'smugmug.login.anonymously' } )
+      json = secure_web_method_call( { :method => 'smugmug.login.anonymously' } )
 
       self.session.id = json["login"]["session"]["id"]
       json 
