@@ -5,7 +5,23 @@ This gem wraps the 1.2.0 interface.
 
 == Features
 
-=== NEW Upload Images/Vids
+=== Configure
+  Smile::Base.configure do |config|
+    config.log = Log.new( STDOUT )
+    config.logger_on = true
+    config.api_key = 'your key from smugmug'
+  end
+    
+
+  new methods
+
+  album.reload!
+  photo.reload!
+
+  Exceptions!!!!
+  Hey it shows you better exceptions now when something goes wrong from the site or lib
+
+=== Upload Images/Vids
 
   smug = Smile.auth( 'foo@bar.com', 'pass' )
   album = smug.albums.first
