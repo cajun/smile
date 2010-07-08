@@ -8,6 +8,7 @@ class Smile::Photo < Smile::Base
   class << self
     # Convert the given xml into photo objects to play with
     def from_json( json )
+      logger.info( json )
       json["images"].map do |image_upper|
         image = upper_hash_to_lower_hash( image_upper )
         image.merge!( :image_id => image["id"] )
@@ -198,5 +199,10 @@ class Smile::Photo < Smile::Base
   def reload!
     @attributes = Smile::Photo.find( { :ImageID => self.image_id, :ImageKey => self.key } ).attributes
     self
+  end
+
+  def encode64( size = :smallurl )
+    url = @attributes.send( size )
+    ActiveSupport::Base64.encode64(open(url)) { |io| io.read }
   end
 end

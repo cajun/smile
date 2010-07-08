@@ -12,17 +12,19 @@ module Smile
 
     # This will be included in every request once you have logged in
     def default_params
-      @params ||= { :APIKey => session.api_key }
-      @params.merge!( :SessionID => session.id ) if( session.id )
-      @params
+      @params ||= { :api_key => session.api_key }
+      @params.merge!( :session_id => session.id ) if( session.id )
+      @params = Smile::ParamConverter.clean_hash_keys( @params )
     end
 
     # This is the base work that will need to be done on ALL 
     # web calls.  Given a set of web options and other params
     # call the web service and convert it to json
     def web_method_call( web_options, options = {} )
-      params = default_params.merge( web_options )
       options = Smile::ParamConverter.clean_hash_keys( options )
+      web_options = Smile::ParamConverter.clean_hash_keys( web_options )
+
+      params = default_params.merge( web_options )
       params.merge!( options ) if( options )
 
       logger.info( params.inspect )
@@ -35,8 +37,10 @@ module Smile
     # web calls.  Given a set of web options and other params
     # call the web service and convert it to json
     def secure_web_method_call( web_options, options = {} )
-      params = default_params.merge( web_options )
       options = Smile::ParamConverter.clean_hash_keys( options )
+      web_options = Smile::ParamConverter.clean_hash_keys( web_options )
+
+      params = default_params.merge( web_options )
       params.merge!( options ) if( options )
 
       logger.info( params.inspect )

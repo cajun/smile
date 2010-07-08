@@ -166,7 +166,7 @@ class Smile::Album < Smile::Base
     # Community
     # @option options [optional, Fixnum] :community_id ( 0 ) join the group
     def create( title, options )
-      json = web_method_call( { :method => 'smugmug.albums.create', :AlbumID => album_id })
+      json = web_method_call( { :method => 'smugmug.albums.create', :album_id => album_id })
 
       self.from_json( json )
     end
@@ -237,7 +237,7 @@ class Smile::Album < Smile::Base
   # Community
   # @option options [optional, Fixnum] :community_id join the group
   def update( options )
-    json = web_method_call( { :method => 'smugmug.albums.changeSettings', :AlbumID => album_id } )
+    json = web_method_call( { :method => 'smugmug.albums.changeSettings', :album_id => album_id } )
 
     true
   end
@@ -253,9 +253,9 @@ class Smile::Album < Smile::Base
     json = web_method_call(
         {
           :method => 'smugmug.images.get',
-          :AlbumID => self.album_id,
-          :AlbumKey => self.key,
-          :Heavy => 1
+          :album_id => album_id,
+          :album_key => key,
+          :heavy => 1
         },
         options
     )
@@ -270,7 +270,7 @@ class Smile::Album < Smile::Base
   # @option options [optional, 1 or 0] :heavy more details
   def stats( options =nil )
     json = web_method_call( 
-      { :method => 'smugmug.albums.getStats', :AlbumID => album_id, :month => Date.today.month, :year => Date.today.year },
+      { :method => 'smugmug.albums.getStats', :album_id => album_id, :month => Date.today.month, :year => Date.today.year },
       options
     )
 
@@ -316,23 +316,23 @@ class Smile::Album < Smile::Base
   
   # Want to get rid of that album?  Call this guy and see what gets removed!
   def delete!
-    json = web_method_call( { :method => 'smugmug.albums.delete', :AlbumID => album_id })
+    json = web_method_call( { :method => 'smugmug.albums.delete', :album_id => album_id })
 
     nil
   end
   
-  # This method will re-sort all the photos inside of the album specified by AlbumID.
+  # This method will re-sort all the photos inside of the album specified by album_id.
   #
   # @option options [String] :by valid values: FileName, Caption, DateTime
   # @option options [String] :direction valid values: ASC, DESC
   def resort!( options =nil )
-    json = web_method_call( { :method => 'smugmug.albums.reSort', :AlbumID => album_id }, options)
+    json = web_method_call( { :method => 'smugmug.albums.reSort', :album_id => album_id }, options)
 
     nil
   end
   
   def reload!
-    @attributes = Smile::Album.find( { :AlbumID => self.album_id } ).attributes
+    @attributes = Smile::Album.find( { :album_id => album_id } ).attributes
     self
   end
 

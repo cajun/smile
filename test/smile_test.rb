@@ -7,7 +7,7 @@ Shindo.tests 'checking all the cool things smile can do'  do
     # this resets the config to the base state before every test
     Smile::Base.clear_config!
     Smile::Base.configure do |config|
-    #  config.logger_on = true
+      config.logger_on = true
     end
 
     @smug = Smile::Smug.new
@@ -34,7 +34,7 @@ Shindo.tests 'checking all the cool things smile can do'  do
       @smug.albums( :nick_name => 'kleinpeter' ) 
     end
     
-    test( 'we can reload albums from the site', ['album']) do 
+    test( 'we can reload albums from the site', ['album', 'reload']) do 
       album = @smug.albums( :nick_name => 'kleinpeter' ).first
       old_title = album.title
       album.title = 'foo'
@@ -54,7 +54,7 @@ Shindo.tests 'checking all the cool things smile can do'  do
       album.key == photo.album.key 
     end
 
-    test( 'we can reload photos from the site', ['photo']) do 
+    test( 'we can reload photos from the site', ['photo', 'reload']) do 
       album = @smug.albums( :nick_name => 'kleinpeter' ).first
       photo = album.photos.first
       old_url = photo.tinyurl
