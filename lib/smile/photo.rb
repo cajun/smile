@@ -203,6 +203,6 @@ class Smile::Photo < Smile::Base
 
   def encode64( size = :smallurl )
     url = @attributes.send( size )
-    ActiveSupport::Base64.encode64(open(url)) { |io| io.read }
+    [open(url){ |io| io.read }].pack('m')
   end
 end
