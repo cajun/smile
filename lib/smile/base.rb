@@ -1,20 +1,20 @@
-# 
+#
 #  base.rb
 #  smile
-#  
+#
 #  Created by Zac Kleinpeter on 2009-04-28.
 #  Copyright 2009 Cajun Country. All rights reserved.
-# 
+#
 module Smile
-  class Base 
+  class Base
     include Smile::Common
     attr_accessor :attributes
-    
+
     class << self
       include Smile::Common
 
       def configure
-        yield( session ) 
+        yield( session )
       end
 
       def clear_config!

@@ -15,7 +15,7 @@ class Smile::Photo < Smile::Base
         image.merge!( :album_key => image["album"]["key"] )
         image.merge!( :album_id => image["album"]["id"] )
         image.delete( 'album' )
-
+                
         Smile::Photo.new( image )
       end
     end

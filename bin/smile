@@ -1,0 +1,21 @@
+#!/usr/bin/enbin/smile
+# -*- mode: ruby -*-
+
+require 'optparse'
+require 'rubygems'
+#require File.join(File.dirname(__FILE__), '../lib/smile' )
+
+options ={}
+opts = OptionParser.new do |opts|
+  opts.banner = "Usage smile [command] [options]"
+end
+
+unless( Dir.exists?( '~/.smile/' ) )
+  puts 'it is not there'
+end
+
+
+if( ARGV.empty? )
+  puts opts
+  exit
+end

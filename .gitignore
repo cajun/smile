@@ -3,6 +3,8 @@
 *.swo
 *.jpg
 .DS_Store
+.rvmrc
+.bundle/
 
 # Dir
 tmp/
@@ -11,6 +13,7 @@ scratch_directory/
 rdoc/
 pkg/
 doc/
+gems/
 
 *.gem
 .yardoc

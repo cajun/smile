@@ -1,0 +1,38 @@
+PATH
+  remote: .
+  specs:
+    smile (0.4.3)
+      activesupport (>= 3.0)
+      i18n
+      json
+      rest-client
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    activesupport (3.0.0)
+    formatador (0.0.15)
+    gestalt (0.0.11)
+      formatador (>= 0.0.12)
+    i18n (0.4.1)
+    json (1.4.6)
+    mime-types (1.16)
+    rest-client (1.6.1)
+      mime-types (>= 1.16)
+    rr (1.0.0)
+    shindo (0.1.6)
+      formatador (>= 0.0.14)
+      gestalt (>= 0.0.11)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  activesupport (>= 3.0)
+  bundler (>= 1.0.0)
+  i18n
+  json
+  rest-client
+  rr
+  shindo
+  smile!

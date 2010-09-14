@@ -34,7 +34,7 @@ module Smile::ParamConverter
         :AlbumID
       else
         key = param
-    end
+    end unless param.nil?
     
     [ key, value ]
   end
