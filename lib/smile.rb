@@ -16,7 +16,7 @@ require File.dirname(__FILE__) + '/smile/exception'
 require File.dirname(__FILE__) + '/smile/json'
 require 'cgi'
 require 'rss'
-require 'json'
+require 'yajl'
 
 module Smile
   module_function

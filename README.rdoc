@@ -62,7 +62,3 @@ This gem wraps the 1.2.0 interface.
 * Update Documentation ( getting there.  it's being published on rdoc.info now http://rdoc.info/projects/cajun/smile )
 * Plugin in Cucumber
 
-
-== Copyright
-
-Copyright (c) 2009 cajun. See LICENSE for details.

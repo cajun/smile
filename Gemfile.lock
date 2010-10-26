@@ -1,28 +1,39 @@
 PATH
   remote: .
   specs:
-    smile (0.4.3)
+    smile (0.4.4)
       activesupport (>= 3.0)
       i18n
-      json
       rest-client
+      yajl-ruby (>= 0.7.8)
 
 GEM
   remote: http://rubygems.org/
   specs:
     activesupport (3.0.0)
+    diff-lcs (1.1.2)
     formatador (0.0.15)
     gestalt (0.0.11)
       formatador (>= 0.0.12)
     i18n (0.4.1)
-    json (1.4.6)
     mime-types (1.16)
     rest-client (1.6.1)
       mime-types (>= 1.16)
     rr (1.0.0)
+    rspec (2.0.1)
+      rspec-core (~> 2.0.1)
+      rspec-expectations (~> 2.0.1)
+      rspec-mocks (~> 2.0.1)
+    rspec-core (2.0.1)
+    rspec-expectations (2.0.1)
+      diff-lcs (>= 1.1.2)
+    rspec-mocks (2.0.1)
+      rspec-core (~> 2.0.1)
+      rspec-expectations (~> 2.0.1)
     shindo (0.1.6)
       formatador (>= 0.0.14)
       gestalt (>= 0.0.11)
+    yajl-ruby (0.7.8)
 
 PLATFORMS
   ruby
@@ -31,8 +42,9 @@ DEPENDENCIES
   activesupport (>= 3.0)
   bundler (>= 1.0.0)
   i18n
-  json
   rest-client
   rr
+  rspec
   shindo
   smile!
+  yajl-ruby (>= 0.7.8)
