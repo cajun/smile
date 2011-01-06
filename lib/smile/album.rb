@@ -82,7 +82,7 @@ class Smile::Album < Smile::Base
         Smile::Album.new( album )
       end
     end
-    
+
     # This will pull a single album from the smugmug.
     # The Site ID is auto passed if you are logged in.
     #
@@ -93,14 +93,14 @@ class Smile::Album < Smile::Base
     # @param options [optional, String] :site_password password for the site
     def find( options={} )
       json = web_method_call( { :method => 'smugmug.albums.getInfo' }, options )
-      
-      album = json['album'] 
+
+      album = json['album']
       album.merge!( :album_id => album["id"] )
       album.merge!( :album_key => album["key"] )
-      
+
       Smile::Album.new( album )
     end
-    
+
     # Update the album from the following params
     #
     # @param [String] title What you want to call it
@@ -302,7 +302,7 @@ class Smile::Album < Smile::Base
         :x_smug_latitude => options[:latitude],
         :x_smug_longitude => options[:longitude],
         :x_smug_altitude => options[:altitude] ).body
-      
+
       image = Smile::Json.parse( json )
       if( image && image["image"] && image["image"]["id"] )
         Smile::Photo.find( :image_id => image["image"]["id"] )
@@ -313,14 +313,14 @@ class Smile::Album < Smile::Base
       raise Smile::Exception.new( "Cannot find file #{image}." )
     end
   end
-  
+
   # Want to get rid of that album?  Call this guy and see what gets removed!
   def delete!
     json = web_method_call( { :method => 'smugmug.albums.delete', :album_id => album_id })
 
     nil
   end
-  
+
   # This method will re-sort all the photos inside of the album specified by album_id.
   #
   # @option options [String] :by valid values: FileName, Caption, DateTime
@@ -330,7 +330,7 @@ class Smile::Album < Smile::Base
 
     nil
   end
-  
+
   def reload!
     @attributes = Smile::Album.find( { :album_id => album_id } ).attributes
     self

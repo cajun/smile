@@ -12,6 +12,7 @@ GEM
   specs:
     activesupport (3.0.0)
     diff-lcs (1.1.2)
+    fakeweb (1.3.0)
     formatador (0.0.15)
     gestalt (0.0.11)
       formatador (>= 0.0.12)
@@ -33,6 +34,7 @@ GEM
     shindo (0.1.6)
       formatador (>= 0.0.14)
       gestalt (>= 0.0.11)
+    vcr (1.2.0)
     yajl-ruby (0.7.8)
 
 PLATFORMS
@@ -41,10 +43,12 @@ PLATFORMS
 DEPENDENCIES
   activesupport (>= 3.0)
   bundler (>= 1.0.0)
+  fakeweb
   i18n
   rest-client
   rr
   rspec
   shindo
   smile!
+  vcr
   yajl-ruby (>= 0.7.8)

@@ -27,11 +27,7 @@ module Smile
     end
 
     def method_missing( name, *args )
-      if args.nil?
-        @attributes.send(name,args)
-      else
-        @attributes.send(name)
-      end
+      @attributes.send(name,*args)
     end
   end
 end
