@@ -1,0 +1,56 @@
+--- 
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: http://api.smugmug.com:80/hack/json/1.2.0/
+    body: 
+    headers: 
+      accept: 
+      - "*/*; q=0.5, application/xml"
+      accept-encoding: 
+      - gzip, deflate
+      content-length: 
+      - "129"
+      content-type: 
+      - application/x-www-form-urlencoded
+      user-agent: 
+      - Ruby
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      server: 
+      - Apache
+      x-s: 
+      - 27.186:22968
+      x-powered-by: 
+      - SmugMug/0.9
+      x-smugmug-hiring: 
+      - "How to love what you do: http://www.smugmug.com/jobs/"
+      x-smugmug-values: 
+      - 3/4 - Be different
+      cache-control: 
+      - private, max-age=1, must-revalidate
+      content-encoding: 
+      - gzip
+      vary: 
+      - Accept-Encoding
+      content-length: 
+      - "206"
+      content-type: 
+      - application/json
+      date: 
+      - Fri, 07 Jan 2011 11:56:50 GMT
+      connection: 
+      - keep-alive
+      set-cookie: 
+      - SMSESS=4359e7680b45aced9be0b28674d8fd80; path=/; domain=.smugmug.com; HttpOnly
+    body: !binary |
+      H4sIAAAAAAAAA12OzQrCMAyAX2Xk3I2uY4P1phN06EFQH6DT2hXXdawZKLJ3
+      N0O8CMkhX778vCGgQpDgH8DAaWz9jargJkORqK6ZXEiMxrq/ezJWCwD5Bkta
+      mgte5lnBYK9fNLV9rvWRpKMPFq3vQWY5g7PFTlO3akcb0KkQCZ5y0jY6XEc7
+      fE0gcFABL8NNoV5+WKw4FbEoorSQopB5SU7tlNGVn3pc7mcMdta0HSX+vuIz
+      g4p2GD++fqwkdpqaf8znef4A9/SSmAIBAAA=
+
+    http_version: "1.1"

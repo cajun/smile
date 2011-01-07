@@ -22,9 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'yajl-ruby', '>= 0.7.8'
 
   s.add_development_dependency "bundler", ">= 1.0.0"
-  s.add_development_dependency "shindo"
-  s.add_development_dependency "rspec"
-  s.add_development_dependency "rr"
+  s.add_development_dependency "minitest"
   s.add_development_dependency "vcr"
   s.add_development_dependency "fakeweb"
 

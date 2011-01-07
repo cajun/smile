@@ -8,8 +8,6 @@ task :console do
     sh "irb -rubygems -r ./lib/smile.rb"
 end
 
-desc "Run Shindo rake tasks"
 task :test do
-  sh "shindo #{Dir.glob( 'test/**/*_test.rb' ).join(' ')}"
+  sh "ruby #{Dir.glob('./spec/*_spec.rb').join(' ')}"
 end
-

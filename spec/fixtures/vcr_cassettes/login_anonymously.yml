@@ -1,0 +1,134 @@
+--- 
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://api.smugmug.com:443/hack/json/1.2.0/
+    body: 
+    headers: 
+      accept: 
+      - "*/*; q=0.5, application/xml"
+      accept-encoding: 
+      - gzip, deflate
+      content-length: 
+      - "72"
+      content-type: 
+      - application/x-www-form-urlencoded
+      user-agent: 
+      - Ruby
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      server: 
+      - Apache
+      x-s: 
+      - 27.186:22956
+      x-powered-by: 
+      - SmugMug/0.9
+      x-smugmug-hiring: 
+      - "How to love what you do: http://www.smugmug.com/jobs/"
+      x-smugmug-values: 
+      - 2/4 - Love your employees
+      cache-control: 
+      - private, max-age=1, must-revalidate
+      content-length: 
+      - "112"
+      content-type: 
+      - application/json
+      date: 
+      - Fri, 07 Jan 2011 11:56:48 GMT
+      connection: 
+      - keep-alive
+      set-cookie: 
+      - SMSESS=67e9f720c88c76c1ac9c103daa355540; path=/; domain=.smugmug.com; HttpOnly
+      - SMSESS=4359e7680b45aced9be0b28674d8fd80; path=/; domain=.smugmug.com; HttpOnly
+      - _ss=c%2FE%2Faa%2BlkIg1s861iHWk4yZxpEW0Wp0GtkoBDQfVa6Yg4e3xxzpPPg%3D%3D; expires=Sat, 08-Jan-2011 12:56:48 GMT; path=/; domain=.smugmug.com
+      - _ss=GobjZuyrq2qe%2B6u7sdhbsMDBZaNso4LylrJLGYl6OSWwuVytQut%2BEg%3D%3D; expires=Sat, 08-Jan-2011 12:56:48 GMT; path=/; domain=.smugmug.com
+    body: "{\"stat\":\"ok\",\"method\":\"smugmug.login.anonymously\",\"Login\":{\"Session\":{\"id\":\"4359e7680b45aced9be0b28674d8fd80\"}}}"
+    http_version: "1.1"
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: http://api.smugmug.com:80/hack/json/1.2.0/
+    body: 
+    headers: 
+      accept: 
+      - "*/*; q=0.5, application/xml"
+      accept-encoding: 
+      - gzip, deflate
+      content-length: 
+      - "136"
+      content-type: 
+      - application/x-www-form-urlencoded
+      user-agent: 
+      - Ruby
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      server: 
+      - Apache
+      x-s: 
+      - 162.6:19454
+      x-powered-by: 
+      - SmugMug/0.9
+      x-smugmug-hiring: 
+      - "How to love what you do: http://www.smugmug.com/jobs/"
+      x-smugmug-values: 
+      - 2/4 - Love your employees
+      cache-control: 
+      - private, max-age=1, must-revalidate
+      content-encoding: 
+      - gzip
+      vary: 
+      - Accept-Encoding
+      content-length: 
+      - "1563"
+      content-type: 
+      - application/json
+      date: 
+      - Fri, 07 Jan 2011 11:56:49 GMT
+      connection: 
+      - keep-alive
+      set-cookie: 
+      - SMSESS=4359e7680b45aced9be0b28674d8fd80; path=/; domain=.smugmug.com; HttpOnly
+    body: !binary |
+      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
+
+    http_version: "1.1"
