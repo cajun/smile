@@ -11,9 +11,9 @@ class Smile::Photo < Smile::Base
       logger.info( json )
       json["images"].map do |image_upper|
         image = upper_hash_to_lower_hash( image_upper )
-        image.merge!( :image_id => image["id"] )
+        image.merge!( :image_id  => image["id"] )
         image.merge!( :album_key => image["album"]["key"] )
-        image.merge!( :album_id => image["album"]["id"] )
+        image.merge!( :album_id  => image["album"]["id"] )
         image.delete( 'album' )
                 
         Smile::Photo.new( image )
@@ -36,9 +36,9 @@ class Smile::Photo < Smile::Base
       image = image['image']
       logger.info( image )
 
-      image.merge!( :image_id => image["id"] )
+      image.merge!( :image_id  => image["id"] )
       image.merge!( :album_key => image["album"]["key"] )
-      image.merge!( :album_id => image["album"]["id"] )
+      image.merge!( :album_id  => image["album"]["id"] )
       image.delete( 'album' )
       
       Smile::Photo.new( image )
@@ -88,9 +88,11 @@ class Smile::Photo < Smile::Base
   # @option options [String] :password a password field
   # @option options [String] :site_password site password field
   def details( options =nil )
-    image = web_method_call(
-      { :method => "smugmug.images.getEXIF", :ImageID => self.image_id, :ImageKey => self.key },
-      options
+    image = web_method_call( { 
+			:method   => "smugmug.images.getEXIF",
+			:ImageID  => self.image_id,
+			:ImageKey => self.key
+			}, options
     )
     
     image.merge!( :image_id => image["id"] )
@@ -182,9 +184,11 @@ class Smile::Photo < Smile::Base
   # String "X3LargeURL" (if available)
   # String "OriginalURL" (if available)
   def urls( options =nil )
-    image = web_method_call(
-      { :method => "smugmug.images.getURLs", :ImageID => self.image_id, :ImageKey => self.key },
-      options
+    image = web_method_call( { 
+			:method   => "smugmug.images.getURLs",
+			:ImageID  => self.image_id,
+			:ImageKey => self.key
+			}, options
     )
       
     image.merge!( :image_id => image["id"] )

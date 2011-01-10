@@ -1,6 +1,22 @@
 module Smile::ParamConverter
   module_function
   
+	# The smugmug api does not use all lowercase for params.  Depending on the service call the
+	# case my be different.  This converter will normalize the params that are passed to the smugmug
+	# api.
+	#
+	# Example:
+	#		:popular_category #  => popularCategory
+	# 	:geo_all          #  => geoAll
+	# 	:data             #  => Data
+	# 	:type             #  => Type
+	# 	:image_id         #  => ImageId
+	# 	:image_key        #  => ImageKey
+	# 	:exif             #  => EXIF
+	# 	:api_key          #  => APIKey
+	# 	:session_id       #  => SessionID
+	#
+	# By doing this conversion it will be easier for the developer to access the params for the web service.
   def convert( param, value=nil )
     key = nil
     key = case param.to_s.downcase.to_sym

@@ -252,10 +252,10 @@ class Smile::Album < Smile::Base
   def photos( options=nil )
     json = web_method_call(
         {
-          :method => 'smugmug.images.get',
-          :album_id => album_id,
+          :method    => 'smugmug.images.get',
+          :album_id  => album_id,
           :album_key => key,
-          :heavy => 1
+          :heavy     => 1
         },
         options
     )
@@ -270,7 +270,12 @@ class Smile::Album < Smile::Base
   # @option options [optional, 1 or 0] :heavy more details
   def stats( options =nil )
     json = web_method_call( 
-      { :method => 'smugmug.albums.getStats', :album_id => album_id, :month => Date.today.month, :year => Date.today.year },
+      { 
+        :method   => 'smugmug.albums.getStats',
+        :album_id => album_id,
+        :month    => Date.today.month,
+        :year     => Date.today.year
+      },
       options
     )
 
@@ -290,20 +295,21 @@ class Smile::Album < Smile::Base
     if( File.exists?( image ) )
       options = Smile::ParamConverter.clean_hash_keys( options )
       json = RestClient.put( UPLOAD + "/#{image}", File.read( image ),
-        :content_length => File.size( image ),
-        :content_md5 => MD5.hexdigest( File.read( image ) ),
-        :x_smug_sessionid => self.session.id,
-        :x_smug_version => VERSION,
+        :content_length      => File.size( image ),
+        :content_md5         => MD5.hexdigest( File.read( image ) ),
+        :x_smug_sessionid    => self.session.id,
+        :x_smug_version      => VERSION,
         :x_smug_responseType => "Smile::Json",
-        :x_smug_albumid => album_id,
-        :x_smug_filename => File.basename( image ),
-        :x_smug_caption => options[:caption],
-        :x_smug_keywords => options[:keywords],
-        :x_smug_latitude => options[:latitude],
-        :x_smug_longitude => options[:longitude],
-        :x_smug_altitude => options[:altitude] ).body
+        :x_smug_albumid      => album_id,
+        :x_smug_filename     => File.basename( image ),
+        :x_smug_caption      => options[:caption],
+        :x_smug_keywords     => options[:keywords],
+        :x_smug_latitude     => options[:latitude],
+        :x_smug_longitude    => options[:longitude],
+        :x_smug_altitude     => options[:altitude] ).body
 
       image = Smile::Json.parse( json )
+
       if( image && image["image"] && image["image"]["id"] )
         Smile::Photo.find( :image_id => image["image"]["id"] )
       else
@@ -316,7 +322,10 @@ class Smile::Album < Smile::Base
 
   # Want to get rid of that album?  Call this guy and see what gets removed!
   def delete!
-    json = web_method_call( { :method => 'smugmug.albums.delete', :album_id => album_id })
+    json = web_method_call( { 
+        :method   => 'smugmug.albums.delete',
+        :album_id => album_id
+    })
 
     nil
   end
@@ -326,7 +335,10 @@ class Smile::Album < Smile::Base
   # @option options [String] :by valid values: FileName, Caption, DateTime
   # @option options [String] :direction valid values: ASC, DESC
   def resort!( options =nil )
-    json = web_method_call( { :method => 'smugmug.albums.reSort', :album_id => album_id }, options)
+    json = web_method_call( { 
+      :method   => 'smugmug.albums.reSort',
+      :album_id => album_id
+    }, options)
 
     nil
   end

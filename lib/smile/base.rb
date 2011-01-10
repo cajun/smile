@@ -3,7 +3,6 @@
 #  smile
 #
 #  Created by Zac Kleinpeter on 2009-04-28.
-#  Copyright 2009 Cajun Country. All rights reserved.
 #
 module Smile
   class Base

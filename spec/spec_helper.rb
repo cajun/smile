@@ -8,10 +8,7 @@ require 'minitest/spec'
 require 'smile'
 require 'vcr'
 
-
 VCR.config do |c|
   c.cassette_library_dir = 'spec/fixtures/vcr_cassettes'
   c.http_stubbing_library = :fakeweb # or :webmock
 end
-
-MiniTest::Unit.autorun

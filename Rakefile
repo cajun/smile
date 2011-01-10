@@ -1,5 +1,12 @@
 require 'bundler'
+require 'rake/testtask'
 Bundler::GemHelper.install_tasks
+
+Rake::TestTask.new(:test) do |test|
+  test.libs << 'lib' << 'spec'
+  test.pattern = './spec/**/*_spec.rb'
+  test.verbose = true
+end
 
 task :default => :test
 
@@ -8,6 +15,3 @@ task :console do
     sh "irb -rubygems -r ./lib/smile.rb"
 end
 
-task :test do
-  sh "ruby #{Dir.glob('./spec/*_spec.rb').join(' ')}"
-end

@@ -3,7 +3,6 @@
 #  smile
 #  
 #  Created by Zac Kleinpeter on 2009-04-28.
-#  Copyright 2009 Cajun Country. All rights reserved.
 # 
 module Smile
   class Smug < Smile::Base
@@ -14,14 +13,17 @@ module Smile
     # @param [String] password The password for the SmugMug account
     #
     # @return [Smile::SmugMug.new] An Smug object that has been authenticated
-    def auth( email, pass )
-     json = secure_web_method_call(
-        { :method => 'smugmug.login.withPassword', :EmailAddress => email, :Password => pass }
-      )
+		def auth( email, pass )
+			json = secure_web_method_call( { 
+					:method       => 'smugmug.login.withPassword',
+					:EmailAddress => email,
+					:Password     => pass
+				}
+			)
 
-      self.session.id = json["login"]["session"]["id"]
-      json
-    end
+			self.session.id = json["login"]["session"]["id"]
+			json
+		end
 
     # Login to SmugMug using an anonymously account
     # This will allow you to execute many functions, but no user specific functions
