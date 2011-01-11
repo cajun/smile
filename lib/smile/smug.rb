@@ -33,7 +33,7 @@ module Smile
       json = secure_web_method_call( { :method => 'smugmug.login.anonymously' } )
 
       self.session.id = json["login"]["session"]["id"]
-      json 
+      json
     end
 
     # Close the session

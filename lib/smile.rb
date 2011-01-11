@@ -54,6 +54,7 @@ module Smile
       url_params << "#{key.to_s}=#{ CGI.escape( value ) }"
     end
 
+    Session.instance.logger.info url + url_params.join( "&" )
     RestClient.get( url + url_params.join( "&" ) ).body
   end
   private( :base_feed )
@@ -80,7 +81,7 @@ module Smile
   #
   # pulling more details from every photo.
   def search( data, options={} )
-    rss.items.map do |item|
+    search_rss(data,options).items.map do |item|
       image_id, image_key = item.link.split('/').last.split('#').last.split('_')
       Smile::Photo.find( :image_id => image_id, :image_key => image_key )
     end
@@ -109,7 +110,7 @@ module Smile
   # @return [Array<Smile::Photo>] RSS feed from the RSS::Parser.parse method
   def search_rss( data, options={} )
     raw = search_raw( data, options )
-    RSS::Parser.parse( raw, false )
+    RSS::Parser.parse( raw, false ) || OpenStruct.new( :items => [] )
   end
 
   # Raw feed from the SmugMug data feeds

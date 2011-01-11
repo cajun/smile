@@ -28,11 +28,11 @@ module Smile::ParamConverter
       when :size 
         value = value.titlecase
         :Size
-      when :data, :type, :description, :keywords, :geography, :position, :header,
+      when :description, :keywords, :geography, :position, :header,
         :clean, :filenames, :public, :external, :protected, :watermarking,
         :larges, :originals, :comments, :share, :printable, :backprinting
         param.to_s.upcase.to_sym
-      when :image_id, :image_key, :image_count, :nick_name, :category_id,
+      when :data, :type, :image_id, :image_key, :image_count, :nick_name, :category_id,
         :sub_category_id, :album_key, :album_template_id, :highlight_id, :square_thumbs,
         :template_id, :sort_method, :sort_direction, :password_hint, :word_searchable,
         :smug_searchable, :watermark_id, :hide_owner, :x_larges, :x2_larges, :x3_larges,

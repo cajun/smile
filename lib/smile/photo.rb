@@ -1,10 +1,9 @@
-# 
+#
 #  photo.rb
 #  smile
-#  
+#
 #  Created by Zac Kleinpeter on 2009-04-28.
 class Smile::Photo < Smile::Base
-  
   class << self
     # Convert the given xml into photo objects to play with
     def from_json( json )
@@ -15,11 +14,11 @@ class Smile::Photo < Smile::Base
         image.merge!( :album_key => image["album"]["key"] )
         image.merge!( :album_id  => image["album"]["id"] )
         image.delete( 'album' )
-                
+
         Smile::Photo.new( image )
       end
     end
-    
+
     # This will pull a single image from the smugmug
     #
     # @param [options,Hash] options the hash of options that you have heard about so much in ruby
@@ -32,7 +31,7 @@ class Smile::Photo < Smile::Base
           { :method => 'smugmug.images.getInfo' },
           options
       )
-      
+
       image = image['image']
       logger.info( image )
 
@@ -40,19 +39,19 @@ class Smile::Photo < Smile::Base
       image.merge!( :album_key => image["album"]["key"] )
       image.merge!( :album_id  => image["album"]["id"] )
       image.delete( 'album' )
-      
+
       Smile::Photo.new( image )
     end
   end
-  
+
   # This method will return camera and photograph details about the image specified by ImageID.
   # The Album must be owned by the Session holder, or else be Public (if password-protected, a
   # Password must be provided), to return results. Otherwise, an "invalid user" faultCode will
   # result. Additionally, the album owner must have specified that EXIF data is allowed. Note that
   # many photos have no EXIF data, so an empty or partially returned result is very normal.# 
   #
-  # Arguments:* 
-  # 
+  # Arguments:*
+  #
   # Result:* struct "Image" [some, none, or all may be returned]
   #   int "id"
   #   String "DateTime"
