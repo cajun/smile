@@ -25,14 +25,14 @@ module Smile::ParamConverter
         :nickname_recent, :nickname_popular, :user_comments, :geo_user,
         :geo_album
         first_letter_downcase( param.to_s.classify ).to_sym
-      when :size 
+      when :size
         value = value.titlecase
         :Size
       when :description, :keywords, :geography, :position, :header,
         :clean, :filenames, :public, :external, :protected, :watermarking,
         :larges, :originals, :comments, :share, :printable, :backprinting
         param.to_s.upcase.to_sym
-      when :data, :type, :image_id, :image_key, :image_count, :nick_name, :category_id,
+      when :data, :type, :image_key, :image_count, :nick_name, :category_id,
         :sub_category_id, :album_key, :album_template_id, :highlight_id, :square_thumbs,
         :template_id, :sort_method, :sort_direction, :password_hint, :word_searchable,
         :smug_searchable, :watermark_id, :hide_owner, :x_larges, :x2_larges, :x3_larges,
@@ -48,6 +48,8 @@ module Smile::ParamConverter
         :SessionID
       when :album_id
         :AlbumID
+      when :image_id
+        :ImageID
       else
         key = param
     end unless param.nil?

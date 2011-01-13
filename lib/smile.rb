@@ -81,6 +81,7 @@ module Smile
   #
   # pulling more details from every photo.
   def search( data, options={} )
+    auth_anonymously
     search_rss(data,options).items.map do |item|
       image_id, image_key = item.link.split('/').last.split('#').last.split('_')
       Smile::Photo.find( :image_id => image_id, :image_key => image_key )
