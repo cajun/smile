@@ -66,18 +66,20 @@
 #   float unsharpsigma (owner, power & pro only)
 #   struct community (owner) id
 #   
-#  @author Zac Kleinpeter 
+#  @author Zac Kleinpeter
 #  @date 2009-04-28.
 class Smile::Album < Smile::Base
 
   class << self
-    # Converts the json results from the web service into 
+    # Converts the json results from the web service into
     # Album object to use
     def from_json( json )
       json["albums"].map do |album_upper|
         album = upper_hash_to_lower_hash( album_upper )
-        album.merge!( :album_id => album["id"] )
-        album.merge!( :album_key => album["key"] )
+        album.merge!( {
+          :album_id  => album["id"],
+          :album_key => album["key"]
+        } )
 
         Smile::Album.new( album )
       end
@@ -95,8 +97,10 @@ class Smile::Album < Smile::Base
       json = web_method_call( { :method => 'smugmug.albums.getInfo' }, options )
 
       album = json['album']
-      album.merge!( :album_id => album["id"] )
-      album.merge!( :album_key => album["key"] )
+      album.merge!( {
+        :album_id  => album["id"],
+        :album_key => album["key"]
+      } )
 
       Smile::Album.new( album )
     end
@@ -238,14 +242,13 @@ class Smile::Album < Smile::Base
   # @option options [optional, Fixnum] :community_id join the group
   def update( options )
     json = web_method_call( { :method => 'smugmug.albums.changeSettings', :album_id => album_id } )
-
     true
   end
-  
+
   # This will pull all the photos for a given album
   #
   # @param [optional, Hash] options wow it's a hash
-  # 
+  #
   # @option options [optional, boolean] :heavy ( true ) default is true
   # @option options [optional, string] :password password for the pics
   # @option options [optional, string] :site_password access via site password
@@ -322,9 +325,9 @@ class Smile::Album < Smile::Base
 
   # Want to get rid of that album?  Call this guy and see what gets removed!
   def delete!
-    json = web_method_call( { 
-        :method   => 'smugmug.albums.delete',
-        :album_id => album_id
+    json = web_method_call( {
+      :method   => 'smugmug.albums.delete',
+      :album_id => album_id
     })
 
     nil
@@ -335,7 +338,7 @@ class Smile::Album < Smile::Base
   # @option options [String] :by valid values: FileName, Caption, DateTime
   # @option options [String] :direction valid values: ASC, DESC
   def resort!( options =nil )
-    json = web_method_call( { 
+    json = web_method_call( {
       :method   => 'smugmug.albums.reSort',
       :album_id => album_id
     }, options)

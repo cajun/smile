@@ -33,7 +33,7 @@ module Smile
 
 		# Call either the secure or the base web url
 		def base_web_method_call( web_options, options ={}, url )
-      options = Smile::ParamConverter.clean_hash_keys( options )
+      options     = Smile::ParamConverter.clean_hash_keys( options )
       web_options = Smile::ParamConverter.clean_hash_keys( web_options )
 
       params = default_params.merge( web_options )
@@ -42,18 +42,19 @@ module Smile
       logger.info( params.inspect )
 
       json = RestClient.post( url, params ).body
-      upper_hash_to_lower_hash(Smile::Json.parse( json ) )
+      upper_hash_to_lower_hash( Smile::Json.parse( json ) )
 		end
 
     # This converts a hash that has mixed case
     # into all lower case
     def upper_hash_to_lower_hash( upper )
-      if( Hash === upper )
-        lower ={}
-        upper.each_pair do |key, value|
+			case upper
+			when Hash
+        upper.inject({}) do |lower,array|
+					key, value = array
           lower[key.downcase] = upper_hash_to_lower_hash( value )
+					lower
         end
-        lower
       else
         upper
       end
