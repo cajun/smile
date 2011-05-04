@@ -10,9 +10,12 @@ class Smile::Photo < Smile::Base
       logger.info( json )
       json["images"].map do |image_upper|
         image = upper_hash_to_lower_hash( image_upper )
-        image.merge!( :image_id  => image["id"] )
-        image.merge!( :album_key => image["album"]["key"] )
-        image.merge!( :album_id  => image["album"]["id"] )
+        image.merge!( {
+          :image_id  => image["id"],
+          :album_key => image["album"]["key"],
+          :album_id  => image["album"]["id"]
+        } )
+
         image.delete( 'album' )
 
         Smile::Photo.new( image )
@@ -35,9 +38,11 @@ class Smile::Photo < Smile::Base
       image = image['image']
       logger.info( image )
 
-      image.merge!( :image_id  => image["id"] )
-      image.merge!( :album_key => image["album"]["key"] )
-      image.merge!( :album_id  => image["album"]["id"] )
+      image.merge!( {
+        :image_id  => image["id"],
+        :album_key => image["album"]["key"],
+        :album_id  => image["album"]["id"]
+      } )
       image.delete( 'album' )
 
       Smile::Photo.new( image )
@@ -48,7 +53,7 @@ class Smile::Photo < Smile::Base
   # The Album must be owned by the Session holder, or else be Public (if password-protected, a
   # Password must be provided), to return results. Otherwise, an "invalid user" faultCode will
   # result. Additionally, the album owner must have specified that EXIF data is allowed. Note that
-  # many photos have no EXIF data, so an empty or partially returned result is very normal.# 
+  # many photos have no EXIF data, so an empty or partially returned result is very normal.#
   #
   # Arguments:*
   #
@@ -183,18 +188,18 @@ class Smile::Photo < Smile::Base
   # String "X3LargeURL" (if available)
   # String "OriginalURL" (if available)
   def urls( options =nil )
-    image = web_method_call( { 
+    image = web_method_call( {
 			:method   => "smugmug.images.getURLs",
 			:ImageID  => self.image_id,
 			:ImageKey => self.key
 			}, options
     )
-      
+
     image.merge!( :image_id => image["id"] )
-    
-    OpenStruct.new( image )  
+
+    OpenStruct.new( image )
   end
-  
+
   def album
     @album ||= Smile::Album.find( :AlbumID => self.album_id, :AlbumKey => self.album_key )
   end

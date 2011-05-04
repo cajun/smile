@@ -17,14 +17,14 @@ module Smile
       @params = Smile::ParamConverter.clean_hash_keys( @params )
     end
 
-    # This is the base work that will need to be done on ALL 
+    # This is the base work that will need to be done on ALL
     # web calls.  Given a set of web options and other params
     # call the web service and convert it to json
     def web_method_call( web_options, options = {} )
 			base_web_method_call( web_options, options, BASE )
     end
 
-    # This is the base work that will need to be done on ALL 
+    # This is the base work that will need to be done on ALL
     # web calls.  Given a set of web options and other params
     # call the web service and convert it to json
     def secure_web_method_call( web_options, options = {} )

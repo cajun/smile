@@ -1,8 +1,8 @@
 module Smile::ParamConverter
   module_function
-  
+
 	# The smugmug api does not use all lowercase for params.  Depending on the service call the
-	# case my be different.  This converter will normalize the params that are passed to the smugmug
+	# case my be different cases.  This converter will normalize the params that are passed to the smugmug
 	# api.
 	#
 	# Example:
@@ -53,10 +53,10 @@ module Smile::ParamConverter
       else
         key = param
     end unless param.nil?
-    
+
     [ key, value ]
   end
-  
+
   def clean_hash_keys( hash_to_clean )
     cleaned_hash ={}
     hash_to_clean.each_pair do |key,value|
@@ -64,7 +64,7 @@ module Smile::ParamConverter
     end if( hash_to_clean )
     cleaned_hash
   end
- 
+
   def first_letter_downcase( stuff )
     stuff.to_s.gsub( /^(\w)/, $1.downcase )
   end
