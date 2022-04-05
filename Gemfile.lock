@@ -18,18 +18,14 @@ GEM
     rest-client (1.6.1)
       mime-types (>= 1.16)
     vcr (1.2.0)
-    yajl-ruby (0.7.8)
+    yajl-ruby (1.4.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport (>= 3.0)
   bundler (>= 1.0.0)
   fakeweb
-  i18n
   minitest
-  rest-client
   smile!
   vcr
-  yajl-ruby (>= 0.7.8)
